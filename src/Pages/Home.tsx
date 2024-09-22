@@ -1,6 +1,7 @@
 import React from "react";
 import { FaMapMarkerAlt, FaRupeeSign, FaSearch } from "react-icons/fa";
 import { HiHome } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -75,12 +76,12 @@ const HighlightCard = ({
 }) => (
   <div className="p-4 border rounded-lg shadow-md bg-red-100 text-center">
     <h3 className="text-lg font-semibold">{title}</h3>
-    <a
-      href="#"
+    <Link
+      to="#"
       className="text-red-500 font-medium mt-2 inline-block hover:underline"
     >
       {linkText} →
-    </a>
+    </Link>
   </div>
 );
 
