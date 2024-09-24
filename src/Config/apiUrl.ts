@@ -1,4 +1,4 @@
-const baseURL = "/user";
+const baseURL = "http://localhost:5000/user";
 
 const API_URL = {
   LOGIN: `${baseURL}/login`,

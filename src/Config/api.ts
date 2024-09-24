@@ -1,7 +1,6 @@
-
 import { NamePath } from "antd/lib/form/interface";
 import axios from "axios";
-import { notification as AntNotification } from "antd"; 
+import { notification as AntNotification } from "antd";
 import { FormInstance } from "antd";
 
 export type ErrorProps = {

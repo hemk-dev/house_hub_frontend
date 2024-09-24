@@ -5,19 +5,23 @@ import Login from "./modules/Auth/Login";
 import Signup from "./modules/Auth/Signup";
 import UserPublicRoute from "./Layout/User/UserPublicLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import List from "./modules/Property/List";
+import Navbar from "./components/Navbar";
 // import AdminPrivateRoute from "./Layout/Admin/AdminPrivateRoute";
 
 function App() {
   return (
     <>
-            <Router>
+      {/* <Router>
         <Routes>
           <Route path="/" element={<UserPublicRoute component={Home}/>} />
           <Route path="/register" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
         </Routes>
-      </Router>
+      </Router> */}
+      {/* <Navbar /> */}
+      <List />
     </>
   );
 }

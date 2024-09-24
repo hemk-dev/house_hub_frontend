@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { useAppDispatch } from "../../Config/store";
 import { doLogin } from "../../Config/AuthSlice";
 
-
 const Login = () => {
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "buyer", // Default role
+    role: 3, // Default role
   });
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -19,7 +18,7 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
       // Dispatch the login action with the form data
@@ -65,7 +64,7 @@ const Login = () => {
                     id="buyer"
                     name="role"
                     value="buyer"
-                    checked={formData.role === "buyer"}
+                    checked={formData.role === 3}
                     onChange={handleChange}
                     className="mr-2"
                   />
@@ -77,7 +76,7 @@ const Login = () => {
                     id="owner"
                     name="role"
                     value="owner"
-                    checked={formData.role === "owner"}
+                    checked={formData.role === 2}
                     onChange={handleChange}
                     className="mr-2"
                   />
@@ -123,7 +122,10 @@ const Login = () => {
                 required
               />
               <div className="text-right mt-1">
-                <a href="/forgotpassword" className="text-red-500 text-sm hover:underline">
+                <a
+                  href="/forgotpassword"
+                  className="text-red-500 text-sm hover:underline"
+                >
                   Forgot Password?
                 </a>
               </div>
