@@ -5,7 +5,7 @@ import Navbar from "../../components/Navbar";
 
 const { Content } = Layout;
 
-const UserPrivateRoute = ({ component: Component, ...rest }) => {
+const UserPrivateRoute = ({ component: Component, ...rest }:any) => {
     const token = localStorage.getItem("id");
     if (!token) {
         return <Navigate to="/login" />;

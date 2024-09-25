@@ -1,8 +1,8 @@
-
 import Navbar from "../../components/Navbar";
 
 
-const UserPublicRoute = ({ component: Component }) => {
+
+const UserPublicRoute = ({ component: Component }:any) => {
     return (
         <div>
             <Navbar />
