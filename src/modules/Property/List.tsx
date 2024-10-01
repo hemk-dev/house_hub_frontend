@@ -1,224 +1,290 @@
 import React, { useEffect, useState } from "react";
-import Modal from "../Property/InquiryModal";
-import {
-  AvailabilityStatus,
-  getAvailabilityStatus,
-} from "./utils/AvailabiltyStatus";
-import { Filters } from "./Filters";
-
-// Interface for Property
+import Filters from "./Filters"; // Ensure the path is correct
+import { getAvailabilityStatus } from "./utils/AvailabiltyStatus";
+import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 interface Property {
-  id: string;
+  id: number;
   name: string;
-  type: string;
-  security_deposit: string;
-  rent: string;
-  status: number;
-  owner_name: string;
   city: string;
-  address: string;
+  state: string;
+  bathroom: number;
+  tenantPreferred: number;
   BHK: number;
   furnishing: number;
-  bathrooms: number;
-  tenant_preferred: string;
-  photos: string[];
+  rent: number;
+  security_deposit: number;
+  createdAt: string;
+  availability_status: number;
+  owner_name: string;
+  contact: string;
+  country: string;
+  address: string;
+  zipcode: string;
+  email: string;
+  carpet_area: string;
   description: string;
+  photos: string[];
 }
 
-// API call function to fetch properties with filters
-const fetchProperties = async (
-  filters: Record<string, string | number>
-): Promise<Property[]> => {
-  // Filter out empty filters
-  const activeFilters = Object.fromEntries(
-    Object.entries(filters).filter(([key, value]) => value !== "" && value !== 0)
-  );
-
-  // Convert filters into query string format
-  const queryString = new URLSearchParams(
-    activeFilters as Record<string, string>
-  ).toString();
-
-  // Fetch properties based on filters (or all properties if no filters applied)
-  const response = await fetch(
-    `http://localhost:5000/properties${queryString ? `?${queryString}` : ""}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch properties");
-  }
-
-  const data = await response.json();
-  return data;
-};
-
 const List: React.FC = () => {
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-
-  // Filter state with initial values
   const [filters, setFilters] = useState({
-    city: "", // Default: no filter applied
-    BHK: 0, // Initialize with 0
-    minRent: 0, // Initialize with a default value (e.g., 0)
-    maxRent: 100000, // Initialize with a default value (e.g., 100000)
-    furnishing: 0, // Initialize with 0
+    city: "",
+    BHK: null,
+    minRent: null,
+    maxRent: null,
+    maxDeposit: null,
+    minDeposit: null,
+    furnishing: null,
   });
 
-  // Load properties on mount and when filters change
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
+  const fetchProperties = async () => {
+    setLoading(true);
+    try {
+      const params: Record<string, string> = {};
+
+      if (filters.city) params.city = filters.city;
+      if (filters.BHK !== null) params.BHK = filters?.BHK;
+      if (filters.minRent !== null) params.minRent = filters?.minRent;
+      if (filters.maxRent !== null) params.maxRent = filters?.maxRent;
+      if (filters.minDeposit !== null) params.minDeposit = filters?.minDeposit;
+      if (filters.maxDeposit !== null) params.maxDeposit = filters?.maxDeposit;
+      if (filters.furnishing !== null) params.furnishing = filters?.furnishing;
+      const response = await fetch(
+        `http://localhost:5000/properties?${new URLSearchParams(params)}`
+      );
+      const data = await response.json();
+      setProperties(data);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadProperties = async () => {
-      try {
-        const data = await fetchProperties(filters);
-        setProperties(data);
-      } catch (err) {
-        setError("Error fetching properties");
-      }
-    };
-    loadProperties();
+    fetchProperties();
   }, [filters]);
 
-  // Handle filter change for dropdowns and number inputs
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
     const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value
+        ? name === "bhk" || name === "furnishing"
+          ? Number(value)
+          : value
+        : null,
+    }));
+  };
 
-    // Convert BHK and furnishing to numbers, rest remain strings
+  const resetFilters = () => {
     setFilters({
-      ...filters,
-      [name]: name === "BHK" || name === "furnishing" ? Number(value) : value,
+      city: "",
+      BHK: null,
+      minRent: null,
+      maxRent: null,
+      maxDeposit: null,
+      minDeposit: null,
+      furnishing: null,
     });
   };
-
-  // Modal handling functions
-  const openModal = (propertyId: string) => {
-    setSelectedPropertyId(propertyId);
-    setIsModalOpen(true);
+  const handleDropDownToggle = () => {
+    setDropDown(!dropDown);
   };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedPropertyId(null);
-  };
-
   return (
-    <>
-      <Filters filters={filters} handleFilterChange={handleFilterChange} />
-      <div className="container mx-auto px-4 py-8">
-        {/* Filters */}
+    <div className="flex">
+      <Filters
+        filters={filters}
+        handleFilterChange={handleFilterChange}
+        resetFilters={resetFilters}
+      />
 
-        {/* Location and Total Results */}
-        <h3 className="text-xl font-semibold mb-4">
-          Properties for Rent in {filters.city || "All Cities"}
+      <div className="w-4/5 p-4">
+        <h3 className="text-2xl font-bold mb-6">
+          {properties.length} results | Properties for Rent{" "}
         </h3>
-        <h2 className="text-lg mb-4">
-          Total Results: {properties.length} Properties
-        </h2>
 
-        {/* Error Handling */}
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-
-        {/* Property List */}
-        <div className="space-y-6">
-          {properties.map((property) => (
-            <div
-              key={property.id}
-              className="border rounded-lg shadow-md overflow-hidden flex items-stretch w-3/4 mx-auto"
-            >
-              {/* Property Image */}
-              <div className="w-1/4 relative">
-                <img
-                  src={property.photos[0]}
-                  alt={property.name}
-                  className="h-full object-cover"
-                />
-                <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded">
-                  {property.photos.length}+ Photos
-                </span>
-              </div>
-
-              {/* Property Details */}
-              <div className="w-2/4 p-4 flex flex-col justify-between">
-                <div>
-                  <h2 className="text-xl font-bold">{property.name}</h2>
-                  <p className="text-gray-600">
-                    {property.address}, {property.city}
-                  </p>
-                  <p className="mt-2 text-sm text-gray-500">
-                    {property.description.length > 150
-                      ? `${property.description.slice(0, 150)}...`
-                      : property.description}
-                  </p>
-                </div>
-
-                {/* Details (BHK, Furnishing, etc.) */}
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  <div>
-                    <span className="block text-sm text-gray-500 uppercase">
-                      Availability
-                    </span>
-                    <span>{getAvailabilityStatus(property.status)}</span>
-                  </div>
-                  <div>
-                    <span className="block text-sm text-gray-500 uppercase">
-                      Furnishing
-                    </span>
-                    <span>
-                      {property.furnishing === 0
-                        ? "Unfurnished"
-                        : property.furnishing === 1
-                        ? "Furnished"
-                        : "Semi-furnished"}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <ul className="space-y-4">
+            {properties.length > 0 ? (
+              properties.map((property) => (
+                <li
+                  key={property.id}
+                  className="border p-4 rounded shadow-lg flex justify-between items-start bg-white"
+                >
+                  <div className="w-1/5">
+                    {/* Left Section with Image */}
+                    <div className="relative">
+                      <img
+                        src={
+                          property.photos[0] ||
+                          "https://via.placeholder.com/150"
+                        }
+                        alt="Property"
+                        className="w-full h-auto rounded"
+                      />
+                      <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded">
+                        {property.photos.length}+ Photos
+                      </span>
+                    </div>
+                    <span className="text-gray-500 text-xs block mt-2">
+                      Posted:{" "}
+                      {new Date(property.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <div>
-                    <span className="block text-sm text-gray-500 uppercase">
-                      BHK
-                    </span>
-                    <span>{property.BHK}</span>
+
+                  <div className="w-3/7 px-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-lg font-semibold">{property.name}</h4>
+                    </div>
+                    <p className="text-md font-medium text-gray-500 mb-2">
+                      {property.address}, {property.zipcode}
+                    </p>
+                    <p className="text-sm text-gray-500 mb-1">
+                      {property.city}, {property.state}, {property.country}
+                    </p>
+
+                    <div className="my-4">
+                      <p>
+                        {property?.description?.length > 100
+                          ? `${property?.description.slice(0, 100)}...`
+                          : property?.description}
+                      </p>
+                    </div>
+                    {/* 
+                    <div className="bg-green-100 text-green-600 w-1/5 py-1 rounded text-s text-center items-center">
+                      <span>
+                        {property.availability_status === 2
+                          ? "Available"
+                          : "Not Available"}
+                      </span>
+                    </div> */}
+                    <div className="bg-gray-100 py-4 px-6 rounded-md my-4 grid grid-cols-8 gap-6 relative">
+                      {/* First Row of Details */}
+                      <div className="col-span-2 space-y-1">
+                        <p className="text-xs uppercase text-gray-500">
+                          furnishing
+                        </p>
+                        <p className="text-md truncate">
+                          {property.furnishing === 0
+                            ? "Unfurnished"
+                            : property.furnishing === 1
+                            ? "Furnished"
+                            : property.furnishing === 2
+                            ? "Semi-furnished"
+                            : ""}
+                        </p>
+                      </div>
+
+                      <div className="bg-gray-300 w-[1px] col-span-1"></div>
+
+                      <div className="col-span-2 space-y-1">
+                        <p className="text-xs uppercase text-gray-500">
+                          availability
+                        </p>
+                        <p className="text-md truncate">
+                          {getAvailabilityStatus(property.availability_status)}
+                        </p>
+                      </div>
+
+                      <div className="bg-gray-300 w-[1px] col-span-1"></div>
+
+                      <div className="col-span-2 space-y-1">
+                        <p className="text-xs uppercase text-gray-500">bhk</p>
+                        <p className="text-md truncate">{property.BHK} BHK</p>
+                      </div>
+
+                      {/* Dropdown Button */}
+                      <div className="absolute right-0 flex justify-center items-center">
+                        <button className="p-2" onClick={handleDropDownToggle}>
+                          {!dropDown ? (
+                            <MdArrowDropDown className="text-2xl" />
+                          ) : (
+                            <MdArrowDropUp className="text-2xl" />
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Dropdown Content */}
+                      {dropDown && (
+                        <>
+                          <div className="col-span-8 mt-4 grid grid-cols-8 gap-6">
+                            <div className="col-span-2 space-y-1">
+                              <p className="text-xs uppercase text-gray-500">
+                                carpet area
+                              </p>
+                              <p className="text-md truncate">
+                                {property.carpet_area} sqft
+                              </p>
+                            </div>
+
+                            <div className="bg-gray-300 w-[1px] col-span-1"></div>
+
+                            <div className="col-span-2 space-y-1">
+                              <p className="text-xs uppercase text-gray-500">
+                                bathroom
+                              </p>
+                              <p className="text-md truncate">
+                                {property.bathroom}
+                              </p>
+                            </div>
+
+                            <div className="bg-gray-300 w-[1px] col-span-1"></div>
+
+                            <div className="col-span-2 space-y-1">
+                              <p className="text-xs uppercase text-gray-500">
+                                tenant preferred
+                              </p>
+                              <p className="text-md truncate">
+                                {property.tenantPreferred === 1
+                                  ? "Bachelors"
+                                  : property.tenantPreferred === 2
+                                  ? "Family"
+                                  : "Bachelors/Family"}
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Rent & Security Section */}
-              <div className="w-1/4 p-4 flex flex-col justify-between">
-                <div className="text-right">
-                  <p className="text-xl font-semibold">
-                    ₹{property.security_deposit}
-                  </p>
-                  <p className="text-gray-500 text-sm">Security Deposit</p>
-                </div>
-                <div className="mt-4 flex flex-col gap-2">
-                  <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg w-full"
-                    onClick={() => openModal(property.id)}
-                  >
-                    Inquire Property
-                  </button>
-                  <button className="border border-red-500 text-red-500 px-4 py-2 rounded-lg w-full">
-                    Get Contact Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <div className="w-2/7 flex flex-col mx-2 gap-6">
+                    {/* Rent, Security Deposit, and Buttons */}
+                    <div className="flex flex-col items-center mb-4">
+                      <p className="font-bold text-xl">
+                        ₹{property.security_deposit}
+                      </p>
+                      <p className="text-md font-normal text-gray-600 text-lg">
+                        Security Deposit
+                      </p>
+                    </div>
 
-        {/* Modal */}
-        {selectedPropertyId && (
-          <Modal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            propertyId={selectedPropertyId}
-          />
+                    <div className="space-y-2">
+                      <button className="px-4 py-2 w-full bg-red-500 text-white rounded-full hover:bg-red-600">
+                        Book
+                      </button>
+                      <button className="px-4 py-2 w-full border border-red-500 text-red-500 rounded-full hover:bg-red-50">
+                        Enquire Now
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <p>No properties found.</p>
+            )}
+          </ul>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

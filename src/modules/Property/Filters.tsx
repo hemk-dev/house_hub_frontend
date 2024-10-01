@@ -1,276 +1,278 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface FiltersProps {
-  filters: any;
+  filters: {
+    city: string;
+    BHK: number | null;
+    minRent: number | null;
+    maxRent: number | null;
+    maxDeposit: number | null;
+    minDeposit: number | null;
+    furnishing: number | null;
+  };
   handleFilterChange: (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => void;
+  resetFilters: () => void;
 }
 
-const FiltersModal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  filters: any;
-  handleFilterChange: (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
-  ) => void;
-}> = ({ isOpen, onClose, filters, handleFilterChange }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-gray-600 backdrop-blur-sm bg-opacity-50 flex justify-center items-center z-50 text-black">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-11/12 max-w-2xl">
-        <h2 className="text-2xl font-bold mb-6">More Filters</h2>
-
-        {/* More Filters Section */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          {/* Availability Status */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">
-              Availability Status
-            </label>
-            <select
-              name="availabilityStatus"
-              onChange={handleFilterChange}
-              value={filters.availabilityStatus || ""}
-              className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 focus:border-gray-400"
-            >
-              <option value="">Select Availability</option>
-              <option value="Available">Available</option>
-              <option value="NotAvailable">Not Available</option>
-            </select>
-          </div>
-
-          {/* Furnishing */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">Furnishing</label>
-            <select
-              name="furnishing"
-              onChange={handleFilterChange}
-              value={filters.furnishing || ""}
-              className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 focus:border-gray-400"
-            >
-              <option value="">Select Furnishing</option>
-              <option value="0">Unfurnished</option>
-              <option value="1">Semi-Furnished</option>
-              <option value="2">Furnished</option>
-            </select>
-          </div>
-
-          {/* BHK */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">BHK</label>
-            <select
-              name="BHK"
-              onChange={handleFilterChange}
-              value={filters.BHK || ""}
-              className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 focus:border-gray-400"
-            >
-              <option value="">Select BHK</option>
-              <option value="1">1 BHK</option>
-              <option value="2">2 BHK</option>
-              <option value="3">3 BHK</option>
-            </select>
-          </div>
-
-          {/* Security Deposit */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">
-              Security Deposit
-            </label>
-            <div className="flex space-x-2">
-              <input
-                type="number"
-                name="minSecurityDeposit"
-                placeholder="Min Security"
-                value={filters.minSecurityDeposit || ""}
-                onChange={handleFilterChange}
-                className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 outline-red-500 w-full"
-              />
-              <input
-                type="number"
-                name="maxSecurityDeposit"
-                placeholder="Max Security"
-                value={filters.maxSecurityDeposit || ""}
-                onChange={handleFilterChange}
-                className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 outline-red-500 w-full"
-              />
-            </div>
-          </div>
-
-          {/* Carpet Area */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">Carpet Area</label>
-            <div className="flex space-x-2">
-              <input
-                type="number"
-                name="minCarpetArea"
-                placeholder="Min Area"
-                value={filters.minCarpetArea || ""}
-                onChange={handleFilterChange}
-                className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 outline-red-500 w-full"
-              />
-              <input
-                type="number"
-                name="maxCarpetArea"
-                placeholder="Max Area"
-                value={filters.maxCarpetArea || ""}
-                onChange={handleFilterChange}
-                className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 outline-red-500 w-full"
-              />
-            </div>
-          </div>
-
-          {/* Sort By */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">Sort By</label>
-            <select
-              name="sortBy"
-              onChange={handleFilterChange}
-              value={filters.sortBy || ""}
-              className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 outline-red-500"
-            >
-              <option value="">Select Sort By</option>
-              <option value="rent">Rent</option>
-              <option value="securityDeposit">Security Deposit</option>
-              <option value="carpetArea">Carpet Area</option>
-            </select>
-          </div>
-
-          {/* Sort Order */}
-          <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">Sort Order</label>
-            <select
-              name="sortOrder"
-              onChange={handleFilterChange}
-              value={filters.sortOrder || ""}
-              className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 outline-red-500"
-            >
-              <option value="ASC">Ascending</option>
-              <option value="DESC">Descending</option>
-            </select>
-          </div>
-
-          {/* Keyword Search */}
-          {/* <div className="flex flex-col">
-            <label className="mb-2 text-sm text-gray-700">Keyword</label>
-            <input
-              type="text"
-              name="keyword"
-              placeholder="Keyword"
-              value={filters.keyword || ""}
-              onChange={handleFilterChange}
-              className="bg-white border border-gray-300 p-2 rounded-lg hover:border-gray-400 focus:border-gray-400"
-            />
-          </div> */}
-        </div>
-
-        {/* Modal Actions */}
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={onClose}
-            className="bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600"
-          >
-            Close
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-green-700 text-white px-5 py-2 rounded-full hover:bg-green-800"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export const Filters: React.FC<FiltersProps> = ({
+const Filters: React.FC<FiltersProps> = ({
   filters,
   handleFilterChange,
+  resetFilters,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterOptions, setFilterOptions] = useState({
+    city: [] as string[],
+    state: [] as string[],
+    country: [] as string[],
+    owner: [] as string[],
+  });
+  
+  // Fetch the dynamic filter options from the API
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/properties/filters"
+        );
+        const data = await response.json();
+        setFilterOptions({
+          city: data.city ?? [],
+          state: data.state ?? [],
+          country: data.country ?? [],
+          owner: data.owner_name ?? [],
+        });
+      } catch (error) {
+        console.error("Failed to fetch filter options", error);
+      }
+    };
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+    fetchFilterOptions();
+  }, []);
 
   return (
-    <div className="bg-red-500 text-white p-4 mb-6">
-      {/* Basic Filters */}
-      <div className="flex flex-wrap items-center space-x-4">
-        {/* City */}
-        <select
-          name="city"
-          onChange={handleFilterChange}
-          value={filters.city || ""}
-          className="bg-white text-black p-2 m-1 focus:outline-none rounded-lg"
-        >
-          <option value="">City</option>
-          <option value="Ahmedabad">Ahmedabad</option>
-          <option value="Mumbai">Mumbai</option>
-        </select>
+    <div className="w-1/5 bg-red-500 p-4 border-r border-gray-200 h-screen ">
+      <h3 className="text-2xl font-sans mb-6 text-white">Filter Properties</h3>
 
-        {/* State */}
-        <select
-          name="city"
-          onChange={handleFilterChange}
-          value={filters.city || ""}
-          className="bg-white text-black p-2 m-1 focus:outline-none rounded-lg"
-        >
-          <option value="">State</option>
-          <option value="Gujarat">Gujarat</option>
-          <option value="Rajashthan">Rajashthan</option>
-        </select>
-
-        {/* Country */}
-        <select
-          name="city"
-          onChange={handleFilterChange}
-          value={filters.city || ""}
-          className="bg-white text-black p-2 m-1 focus:outline-none rounded-lg max-w-48"
-        >
-          <option value="">Country</option>
-          <option value="India">India</option>
-          <option value="Canada">Canada</option>
-          <option value="United Kingdom abc">United Kingdom</option>
-        </select>
-
-        {/* Rent Range */}
-        <div className="flex items-center mx-8">
+      {/*Rent Filter */}
+      <div className="flex gap-4">
+        <div className="mb-4">
+          <label
+            htmlFor="minRent"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Min Rent (₹)
+          </label>
           <input
             type="number"
+            id="minRent"
             name="minRent"
-            placeholder="Min Rent"
-            value={filters.minRent || ""}
+            value={filters.minRent || 0}
             onChange={handleFilterChange}
-            className="bg-white text-black p-2 m-1 rounded-lg"
-          />
-          <input
-            type="number"
-            name="maxRent"
-            placeholder="Max Rent"
-            value={filters.maxRent || ""}
-            onChange={handleFilterChange}
-            className="bg-white text-black p-2 m-1 rounded-lg"
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+            placeholder="Minimum Rent"
           />
         </div>
 
-        {/* Open Modal for more filters */}
-        <button
-          onClick={openModal}
-          className="bg-blue-500 text-white p-2 rounded-full px-5"
-        >
-          More Filters
-        </button>
+        <div className="mb-4">
+          <label
+            htmlFor="maxRent"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Max Rent (₹)
+          </label>
+          <input
+            type="number"
+            id="maxRent"
+            name="maxRent"
+            value={filters.maxRent || 0}
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+            placeholder="Maximum Rent"
+          />
+        </div>
       </div>
 
-      {/* Filters Modal */}
-      <FiltersModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        filters={filters}
-        handleFilterChange={handleFilterChange}
-      />
+      <div className="flex gap-4">
+        <div className="mb-4">
+          <label
+            htmlFor="minDeposit"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Min Deposit (₹)
+          </label>
+          <input
+            type="number"
+            id="minDeposit"
+            name="minDeposit"
+            value={filters.minDeposit || 0}
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2"
+            placeholder="Minimum Deposit"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="maxRent"
+            className="block text-sm font-medium text-white mb-1 "
+          >
+            Max Deposit (₹)
+          </label>
+          <input
+            type="number"
+            id="maxDeposit"
+            name="maxDeposit"
+            value={filters.maxDeposit || 0}
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+            placeholder="Maximum Deposit"
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-4">
+        {/* BHK Filter */}
+        <div className="mb-4 w-2/4">
+          <label htmlFor="BHK" className="text-sm font-medium text-white mb-1">
+            BHK
+          </label>
+          <select
+            id="BHK"
+            name="BHK"
+            value={filters.BHK || ''}
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+          >
+            <option value={0}>Any</option>
+            <option value={1}>1 BHK</option>
+            <option value={2}>2 BHK</option>
+            <option value={3}>3 BHK</option>
+            <option value={4}>4 BHk</option>
+          </select>
+        </div>
+
+        {/* Furnishing Filter */}
+        <div className="mb-4">
+          <label
+            htmlFor="furnishing"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            Furnishing
+          </label>
+          <select
+            id="furnishing"
+            name="furnishing"
+            value={filters.furnishing || 0}
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+          >
+            <option value={0}>Any</option>
+            <option value={0}>Furnished</option>
+            <option value={1}>Semi-Furnished</option>
+            <option value={2}>Unfurnished</option>
+          </select>
+        </div>
+      </div>
+      {/* Country Filter */}
+      <div className="mb-4">
+        <label
+          htmlFor="country"
+          className="block text-sm font-medium text-white mb-1"
+        >
+          Country
+        </label>
+        <select
+          id="country"
+          name="country"
+          onChange={handleFilterChange}
+          className="w-full border border-gray-300 rounded-md p-2 outline-none"
+        >
+          <option value="">All</option>
+          {filterOptions.country.map((country, index) => (
+            <option key={index} value={country}>
+              {country}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex gap-4">
+        {/* State Filter */}
+        <div className="mb-4 w-2/4">
+          <label
+            htmlFor="state"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            State
+          </label>
+          <select
+            id="state"
+            name="state"
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+          >
+            <option value="">All</option>
+            {filterOptions.state.map((state, index) => (
+              <option key={index} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4 w-2/4">
+          <label
+            htmlFor="city"
+            className="block text-sm font-medium text-white mb-1"
+          >
+            City
+          </label>
+          <select
+            id="city"
+            name="city"
+            value={filters.city}
+            onChange={handleFilterChange}
+            className="w-full border border-gray-300 rounded-md p-2 outline-none"
+          >
+            <option value="">All</option>
+            {filterOptions.city.map((city, index) => (
+              <option key={index} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="state"
+          className="block text-sm font-medium text-white mb-1"
+        >
+          Owner
+        </label>
+        <select
+          id="state"
+          name="state"
+          onChange={handleFilterChange}
+          className="w-full border border-gray-300 rounded-md p-2 outline-none"
+        >
+          <option value="">All</option>
+          {filterOptions.owner.map((owner, index) => (
+            <option key={index} value={owner}>
+              {owner}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <button
+        onClick={resetFilters}
+        className="mt-4 px-4 py-2 w-full bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Reset Filters
+      </button>
     </div>
   );
 };
+
+export default Filters;
