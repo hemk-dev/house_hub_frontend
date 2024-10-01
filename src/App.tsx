@@ -15,7 +15,7 @@ import PropertyList from "./modules/Dashboard/Components/PropertyList";
 function App() {
   return (
     <>
-      {/* <Router>
+      <Router>
         <Routes>
           <Route path="/" element={<UserPublicRoute component={Home} />} />
           <Route path="/register" element={<Signup />} />
@@ -63,9 +63,9 @@ function App() {
             />
           </Route>
         </Routes>
-      </Router> */}
+      </Router>
       {/* <Navbar /> */}
-      <List />
+      {/* <List /> */}
       {/* <Home /> */}
     </>
   );

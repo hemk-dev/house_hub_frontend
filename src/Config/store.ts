@@ -2,9 +2,11 @@ import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import authReducer from "./AuthSlice";
 
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import dashboardReducer from "../modules/Dashboard/utils/slice";
 
 
 const reducer = {  auth: authReducer,
+  dashboard: dashboardReducer
 
 };
 
