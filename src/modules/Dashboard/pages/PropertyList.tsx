@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Space, Table } from "antd";
+import { Button, Space, Table, Breadcrumb, Layout, Row, Col } from "antd";
+import { useNavigate } from "react-router-dom"; // For navigation
 import { useAppDispatch, useAppSelector } from "../../../Config/store";
 import { fetchPropertyData, propertyDelete } from "../utils/slice";
 import DeleteModal from "../../../components/DeleteModal";
-import ViewDrawerProperty from "./ViewDrawerProperty";
+import ViewDrawerProperty from "../Components/ViewDrawerProperty";
+import CreateProperty from "../Components/CreateProperty"; // Import the updated CreateProperty component
+
+const { Header, Content } = Layout;
 
 interface PropertyType {
   key: string;
@@ -20,8 +24,10 @@ const PropertyList: React.FC = () => {
   const [deleteValue, setDeleteValue] = useState<number | null>(null);
   const [viewVisible, setViewVisible] = useState<boolean>(false); // State for drawer visibility
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null); // Store selected property ID
+  const [createVisible, setCreateVisible] = useState<boolean>(false); // State for Create Property Drawer visibility
   const dispatch = useAppDispatch();
   const properties = useAppSelector((state) => state.dashboard.propertyData);
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,16 +84,51 @@ const PropertyList: React.FC = () => {
       key: "action",
       render: (record: any) => (
         <Space size="middle">
-          <a onClick={() => { setSelectedPropertyId(record.key); setViewVisible(true); }}>View</a>
-          <a onClick={() => setDeleteValue(record.key)}>Delete</a>
+          <Button
+            onClick={() => {
+              setSelectedPropertyId(record.key);
+              setViewVisible(true);
+            }}
+          >
+            View
+          </Button>
+          <Button onClick={() => setDeleteValue(record.key)}>Delete</Button>
         </Space>
       ),
     },
   ];
 
   return (
-    <>
-      <Table<PropertyType> columns={columns} dataSource={dataSource} loading={loading} />
+    <Layout>
+      <Header className="bg-white p-4">
+        <Row justify="space-between" align="middle">
+          {/* Breadcrumb on the left */}
+          <Col>
+            <Breadcrumb className="">
+              <Breadcrumb.Item>
+                <span onClick={() => navigate("/dashboard")} className="cursor-pointer text-black font-bold">
+                  Dashboard
+                </span>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>Properties</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          {/* Create Property Button on the right */}
+          <Col>
+            <Button type="primary" onClick={() => setCreateVisible(true)}>
+              Create Property
+            </Button>
+          </Col>
+        </Row>
+      </Header>
+
+      {/* Add margin-top to create gap between header and table */}
+      <Content className="mt-4" style={{ padding: "20px" }}>
+        <Table<PropertyType> columns={columns} dataSource={dataSource} loading={loading} />
+      </Content>
+
+      {/* Create Property Drawer */}
+      <CreateProperty visible={createVisible} onClose={() => setCreateVisible(false)} />
 
       {/* DeleteModal for deletion confirmation */}
       <DeleteModal
@@ -103,7 +144,7 @@ const PropertyList: React.FC = () => {
         onClose={() => setViewVisible(false)}
         propertyId={selectedPropertyId} // Pass the selected property ID
       />
-    </>
+    </Layout>
   );
 };
 

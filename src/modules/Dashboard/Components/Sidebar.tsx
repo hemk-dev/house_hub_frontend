@@ -62,46 +62,6 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
               >
                 Users
               </li>
-              <li
-                className={`cursor-pointer px-6 py-2 ${
-                  selectedLink === "order" && "bg-gray-200"
-                }`}
-                onClick={() => handleLinkClick("order")}
-              >
-                Orders
-              </li>
-              <li
-                className={`cursor-pointer px-6 py-2 ${
-                  selectedLink === "addProduct" && "bg-gray-200"
-                }`}
-                onClick={() => handleLinkClick("addProduct")}
-              >
-                Add New Product
-              </li>
-              <li
-                className={`cursor-pointer px-6 py-2 ${
-                  selectedLink === "getProduct" && "bg-gray-200"
-                }`}
-                onClick={() => handleLinkClick("getProduct")}
-              >
-                Get All Product
-              </li>
-              <li
-                className={`cursor-pointer px-6 py-2 ${
-                  selectedLink === "updateProduct" && "bg-gray-200"
-                }`}
-                onClick={() => handleLinkClick("updateProduct")}
-              >
-                Update Product Details
-              </li>
-              <li
-                className={`cursor-pointer px-6 py-2 ${
-                  selectedLink === "deleteProduct" && "bg-gray-200"
-                }`}
-                onClick={() => handleLinkClick("deleteProduct")}
-              >
-                Delete Product
-              </li>
             </div>
             <div>
               <li
