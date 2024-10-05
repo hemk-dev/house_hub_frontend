@@ -32,6 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const links = [
     { name: "Properties", path: "properties" },
     { name: "Users", path: "users" },
+    { name: "Inquiry", path: "inquiry" },
   ];
 
   return (

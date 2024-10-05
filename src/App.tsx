@@ -9,6 +9,7 @@ import Login from "./modules/Auth/Login";
 import ForgotPassword from "./modules/Auth/ForgotPassword";
 import PropertyList from "./modules/Dashboard/pages/PropertyList";
 import UserList from "./modules/Dashboard/pages/UserList";
+import InquiryList from "./modules/Dashboard/pages/InquiryList";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         >
           <Route path="properties" element={<PropertyList />} />
           <Route path="users" element={<UserList />} />
+          <Route path="inquiry" element={<InquiryList />} />
         </Route>
 
         {/* Example of how to add more public routes for buyers or other roles

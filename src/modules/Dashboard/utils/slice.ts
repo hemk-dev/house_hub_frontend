@@ -8,6 +8,7 @@ interface AuthState {
   isLoading: boolean;
   userData: any;
   propertyData: [];
+  inquiryData: [];
   details: any; // Details of a specific record
 }
 
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   isLoading: false,
   userData: null,
   propertyData: [],
+  inquiryData: [],
   details: null,
 };
 
@@ -27,6 +29,9 @@ const dashboardSlice = createSlice({
     },
     setPropertyData: (state, action: PayloadAction<any>) => {
       state.propertyData = action.payload;
+    },
+    setInquiryData: (state, action: PayloadAction<any>) => {
+      state.inquiryData = action.payload;
     },
     start: (state) => {
       state.isLoading = true;
@@ -49,6 +54,7 @@ export const {
   failure,
   setUserData,
   setPropertyData,
+  setInquiryData,
   setDetails,
 } = dashboardSlice.actions;
 
@@ -80,6 +86,20 @@ export const fetchPropertyData = (): AppThunk => async (dispatch) => {
   }
 };
 
+// Fetch inquiry data
+export const fetchInqiryList = (): AppThunk => async (dispatch) => {
+  try {
+    dispatch(start());
+    const response = await api.get(API_URL.INQUIRY_LIST);
+    dispatch(success());
+    dispatch(setInquiryData(response.data));
+    return Promise.resolve(response.data);
+  } catch (error: any) {
+    dispatch(failure());
+    return Promise.reject(error.response ? error.response.data : error.message);
+  }
+};
+
 // Fetch property details by ID
 export const propertyDetailsById =
   (id: any): AppThunk<any> =>
@@ -92,7 +112,22 @@ export const propertyDetailsById =
       return Promise.resolve(response.data);
     } catch (error: any) {
       dispatch(failure());
+      return Promise.reject(error.data);
+    }
+  };
 
+// Update inquiry status by ID
+export const inquiryStatusUpdateById =
+  (id: any): AppThunk<any> =>
+  async (dispatch) => {
+    try {
+      dispatch(start());
+      const response = await api.patch(API_URL.INQUIRY_STATUS(id));
+      await dispatch(fetchInqiryList());
+      dispatch(success());
+      return Promise.resolve(response.data);
+    } catch (error: any) {
+      dispatch(failure());
       return Promise.reject(error.data);
     }
   };
@@ -122,9 +157,7 @@ export const propertyDelete =
     try {
       dispatch(start());
       const response = await api.delete(API_URL.PROPERTY_DELETE(id));
-
       await dispatch(fetchPropertyData());
-
       dispatch(success());
       return Promise.resolve(response.data);
     } catch (error: any) {
@@ -137,22 +170,20 @@ export const propertyDelete =
 
 // user delete
 export const userDelete =
-(id: string): AppThunk<any> =>
-async (dispatch) => {
-  try {
-    dispatch(start());
-    const response = await api.delete(API_URL.USER_DELETE(id));
-
-    await dispatch(fetchPropertyData());
-
-    dispatch(success());
-    return Promise.resolve(response.data);
-  } catch (error: any) {
-    dispatch(failure());
-    return Promise.reject(
-      error.response ? error.response.data : error.message
-    );
-  }
-};
+  (id: string): AppThunk<any> =>
+  async (dispatch) => {
+    try {
+      dispatch(start());
+      const response = await api.delete(API_URL.USER_DELETE(id));
+      await dispatch(fetchUserData());
+      dispatch(success());
+      return Promise.resolve(response.data);
+    } catch (error: any) {
+      dispatch(failure());
+      return Promise.reject(
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
 const dashboardReducer = dashboardSlice.reducer;
 export default dashboardReducer;

@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import api from "./api";
 import { AppThunk } from "./store";
-import { stringEncryption } from "./Global";
 import API_URL from "./apiUrl";
 import { jwtDecode } from "jwt-decode";
 
