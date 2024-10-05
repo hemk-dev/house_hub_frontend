@@ -5,12 +5,12 @@ import Login from "./modules/Auth/Login";
 import Signup from "./modules/Auth/Signup";
 import UserPublicRoute from "./Layout/User/UserPublicLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import List from "./modules/Property/List";
+// import List from "./modules/Property/List";
 
 import AdminPrivateRoute from "./Layout/Admin/AdminPrivateRoute";
 import Dashboard from "./modules/Dashboard/Dashboard";
 import LandingPage from "./modules/Dashboard/pages/LandingPage";
-import PropertyList from "./modules/Dashboard/Components/PropertyList";
+import PropertyList from "./modules/Dashboard/pages/PropertyList";
 
 function App() {
   return (

@@ -9,15 +9,13 @@ interface AuthState {
   userData: any;
   propertyData: [];
   details: any; // Details of a specific record
-
 }
 
 const initialState: AuthState = {
   isLoading: false,
   userData: null,
-  propertyData:[],
-    details: null,
-
+  propertyData: [],
+  details: null,
 };
 
 const dashboardSlice = createSlice({
@@ -28,8 +26,8 @@ const dashboardSlice = createSlice({
       state.userData = action.payload;
     },
     setPropertyData: (state, action: PayloadAction<any>) => {
-        state.propertyData = action.payload;
-      },
+      state.propertyData = action.payload;
+    },
     start: (state) => {
       state.isLoading = true;
     },
@@ -40,7 +38,7 @@ const dashboardSlice = createSlice({
       state.isLoading = false;
     },
     setDetails: (state, action: PayloadAction<any>) => {
-      state.details = action?.payload; // Set details state
+      state.details = action?.payload;
     },
   },
 });
@@ -51,9 +49,10 @@ export const {
   failure,
   setUserData,
   setPropertyData,
-  setDetails
+  setDetails,
 } = dashboardSlice.actions;
 
+// Fetch user data
 export const fetchUserData = (): AppThunk => async (dispatch) => {
   try {
     dispatch(start());
@@ -67,49 +66,74 @@ export const fetchUserData = (): AppThunk => async (dispatch) => {
   }
 };
 
-
+// Fetch property data
 export const fetchPropertyData = (): AppThunk => async (dispatch) => {
+  try {
+    dispatch(start());
+    const response = await api.get(API_URL.PROPERTY_LIST);
+    dispatch(success());
+    dispatch(setPropertyData(response.data));
+    return Promise.resolve(response.data);
+  } catch (error: any) {
+    dispatch(failure());
+    return Promise.reject(error.response ? error.response.data : error.message);
+  }
+};
+
+// Fetch property details by ID
+export const propertyDetailsById =
+  (id: any): AppThunk<any> =>
+  async (dispatch) => {
     try {
       dispatch(start());
-      const response = await api.get(API_URL.PROPERTY_LIST);
+      const response = await api.get(API_URL.PROPERTY_DETAILS(id));
+      dispatch(setDetails(response.data.data));
       dispatch(success());
-      dispatch(setPropertyData(response.data));
       return Promise.resolve(response.data);
     } catch (error: any) {
       dispatch(failure());
-      return Promise.reject(error.response ? error.response.data : error.message);
+
+      return Promise.reject(error.data);
     }
   };
 
-  export const propertyDetailsById =
-  (id: any): AppThunk<any> =>
-    async dispatch => {
-      try {
-        dispatch(start());
-        const response = await api.get(API_URL.PROPERTY_DETAILS(id));
-        dispatch(setDetails(response.data.data));
-        dispatch(success());
-        return Promise.resolve(response.data);
-      } catch (error: any) {
-        dispatch(failure());
+// create property
+export const createProperty =
+  (propertyData: any): AppThunk<any> =>
+  async (dispatch) => {
+    try {
+      dispatch(start());
+      const response = await api.post(API_URL.PROPERTY_CREATE, propertyData);
+      dispatch(success());
+      await dispatch(fetchPropertyData());
+      return Promise.resolve(response.data);
+    } catch (error: any) {
+      dispatch(failure());
+      return Promise.reject(
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
 
-        return Promise.reject(error.data);
-      }
-    };
-
-    export const propertyDelete =
+// property delete
+export const propertyDelete =
   (id: string): AppThunk<any> =>
-    async dispatch => {
-      try {
-        dispatch(start());
-        const response = await api.get(API_URL.PROPERTY_DELETE(id));
-        dispatch(success());
-        return Promise.resolve(response.data);
-      } catch (error: any) {
-        dispatch(failure());
-        return Promise.reject(error.data);
-      }
-    };
+  async (dispatch) => {
+    try {
+      dispatch(start());
+      const response = await api.delete(API_URL.PROPERTY_DELETE(id));
+
+      await dispatch(fetchPropertyData());
+
+      dispatch(success());
+      return Promise.resolve(response.data);
+    } catch (error: any) {
+      dispatch(failure());
+      return Promise.reject(
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
 
 const dashboardReducer = dashboardSlice.reducer;
 export default dashboardReducer;
