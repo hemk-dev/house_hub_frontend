@@ -10,6 +10,7 @@ import ForgotPassword from "./modules/Auth/ForgotPassword";
 import PropertyList from "./modules/Dashboard/pages/PropertyList";
 import UserList from "./modules/Dashboard/pages/UserList";
 import InquiryList from "./modules/Dashboard/pages/InquiryList";
+import List from "./modules/Property/List";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           path="/register"
           element={<UserPublicRoute component={Signup} />}
         />
+        <Route path="/list" element={<UserPublicRoute component={List} />} />
         <Route
           path="/forgot-password"
           element={<UserPublicRoute component={ForgotPassword} />}
