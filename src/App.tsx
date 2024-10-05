@@ -7,6 +7,8 @@ import RoleBasedRoute from "./Layout/RoleBasedRoute";
 import Signup from "./modules/Auth/Signup";
 import Login from "./modules/Auth/Login";
 import ForgotPassword from "./modules/Auth/ForgotPassword";
+import PropertyList from "./modules/Dashboard/pages/PropertyList";
+import UserList from "./modules/Dashboard/pages/UserList";
 
 function App() {
   return (
@@ -30,7 +32,10 @@ function App() {
               <Dashboard />
             </RoleBasedRoute>
           }
-        />
+        >
+          <Route path="properties" element={<PropertyList />} />
+          <Route path="users" element={<UserList />} />
+        </Route>
 
         {/* Example of how to add more public routes for buyers or other roles
         <Route
