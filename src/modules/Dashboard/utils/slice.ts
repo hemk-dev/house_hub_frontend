@@ -58,7 +58,7 @@ export const fetchUserData = (): AppThunk => async (dispatch) => {
     dispatch(start());
     const response = await api.get(API_URL.USER_LIST);
     dispatch(success());
-    dispatch(setUserData(response));
+    dispatch(setUserData(response.data.data));
     return Promise.resolve(response.data);
   } catch (error: any) {
     dispatch(failure());
@@ -135,5 +135,24 @@ export const propertyDelete =
     }
   };
 
+// user delete
+export const userDelete =
+(id: string): AppThunk<any> =>
+async (dispatch) => {
+  try {
+    dispatch(start());
+    const response = await api.delete(API_URL.USER_DELETE(id));
+
+    await dispatch(fetchPropertyData());
+
+    dispatch(success());
+    return Promise.resolve(response.data);
+  } catch (error: any) {
+    dispatch(failure());
+    return Promise.reject(
+      error.response ? error.response.data : error.message
+    );
+  }
+};
 const dashboardReducer = dashboardSlice.reducer;
 export default dashboardReducer;

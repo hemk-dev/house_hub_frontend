@@ -11,6 +11,7 @@ import AdminPrivateRoute from "./Layout/Admin/AdminPrivateRoute";
 import Dashboard from "./modules/Dashboard/Dashboard";
 import LandingPage from "./modules/Dashboard/pages/LandingPage";
 import PropertyList from "./modules/Dashboard/pages/PropertyList";
+import UserList from "./modules/Dashboard/pages/UserList";
 
 function App() {
   return (
@@ -34,32 +35,8 @@ function App() {
               element={<AdminPrivateRoute component={PropertyList} />}
             />
             <Route
-              path="order"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="order/orderDetails/:id"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
               path="user"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="addProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="getProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="updateProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="deleteProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
+              element={<AdminPrivateRoute component={UserList} />}
             />
           </Route>
         </Routes>
