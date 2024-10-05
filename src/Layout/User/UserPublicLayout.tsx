@@ -1,16 +1,20 @@
+import React from "react";
 import Navbar from "../../components/Navbar";
 
+// Define the props interface
+interface UserPublicRouteProps {
+  component: React.ComponentType; // The component to render
+}
 
-
-const UserPublicRoute = ({ component: Component }:any) => {
-    return (
-        <div>
-            <Navbar />
-            <div style={{ padding: "0", marginTop: "16vh" }}>
-                <Component />
-            </div>
-        </div>
-    );
+const UserPublicRoute: React.FC<UserPublicRouteProps> = ({
+  component: Component,
+}) => {
+  return (
+    <>
+      <Navbar />
+      <Component />
+    </>
+  );
 };
 
 export default UserPublicRoute;

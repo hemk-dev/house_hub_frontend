@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux"; 
-import { forgotPassword, verifyOtp, resetPassword } from "../../Config/AuthSlice"; 
+import { useDispatch } from "react-redux";
+import {
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
+} from "../../Config/AuthSlice";
 import { AppDispatch } from "../../Config/store";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -12,7 +17,7 @@ const ForgotPassword = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const dispatch = useDispatch<AppDispatch>(); // Type the dispatch
-
+  const navigate = useNavigate();
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -31,7 +36,8 @@ const ForgotPassword = () => {
 
     try {
       const response = await dispatch(verifyOtp({ email, otp }));
-      if (response.success) {
+      console.log("OTP Response:", response.status);
+      if (response.status === 201) {
         setStep(3);
       } else {
         setError("Invalid OTP. Please try again.");
@@ -52,13 +58,14 @@ const ForgotPassword = () => {
     }
 
     try {
-      await dispatch(resetPassword({ email, newPassword }));
-      setSuccess("Password reset successfully! You can now log in.");
+      await dispatch(resetPassword({ email, password: newPassword }));
+      setSuccess("Password reset successfully!");
       setStep(1);
       setEmail("");
       setOtp("");
       setNewPassword("");
       setConfirmPassword("");
+      navigate("/login");
     } catch (error) {
       setError("Error resetting password. Please try again.");
     }
@@ -78,17 +85,36 @@ const ForgotPassword = () => {
       <div className="w-2/3 flex items-start justify-center p-10">
         <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
           <h2 className="text-3xl font-normal text-center mb-8 uppercase">
-            {step === 1 ? "Send OTP" : step === 2 ? "Verify OTP" : "Reset Password"}
+            {step === 1
+              ? "Send OTP"
+              : step === 2
+              ? "Verify OTP"
+              : "Reset Password"}
           </h2>
 
-          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-          {success && <div className="text-green-500 text-center mb-4">{success}</div>}
+          {error && (
+            <div className="text-red-500 text-center mb-4">{error}</div>
+          )}
+          {success && (
+            <div className="text-green-500 text-center mb-4">{success}</div>
+          )}
 
-          <form onSubmit={step === 1 ? handleEmailSubmit : step === 2 ? handleOtpSubmit : handlePasswordReset}>
+          <form
+            onSubmit={
+              step === 1
+                ? handleEmailSubmit
+                : step === 2
+                ? handleOtpSubmit
+                : handlePasswordReset
+            }
+          >
             {step === 1 && (
               <>
                 <div className="mb-4">
-                  <label htmlFor="email" className="block text-md font-medium text-gray-700">
+                  <label
+                    htmlFor="email"
+                    className="block text-md font-medium text-gray-700"
+                  >
                     Email
                   </label>
                   <input
@@ -101,7 +127,10 @@ const ForgotPassword = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="w-full py-2 text-lg font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">
+                <button
+                  type="submit"
+                  className="w-full py-2 text-lg font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600"
+                >
                   Send OTP
                 </button>
               </>
@@ -110,7 +139,10 @@ const ForgotPassword = () => {
             {step === 2 && (
               <>
                 <div className="mt-6 mb-4">
-                  <label htmlFor="otp" className="block text-md font-medium text-gray-700">
+                  <label
+                    htmlFor="otp"
+                    className="block text-md font-medium text-gray-700"
+                  >
                     OTP
                   </label>
                   <input
@@ -123,7 +155,10 @@ const ForgotPassword = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="w-full py-2 text-lg font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">
+                <button
+                  type="submit"
+                  className="w-full py-2 text-lg font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600"
+                >
                   Verify OTP
                 </button>
               </>
@@ -132,7 +167,10 @@ const ForgotPassword = () => {
             {step === 3 && (
               <>
                 <div className="mt-6 mb-4">
-                  <label htmlFor="new-password" className="block text-md font-medium text-gray-700">
+                  <label
+                    htmlFor="new-password"
+                    className="block text-md font-medium text-gray-700"
+                  >
                     New Password
                   </label>
                   <input
@@ -146,7 +184,10 @@ const ForgotPassword = () => {
                   />
                 </div>
                 <div className="mt-6 mb-4">
-                  <label htmlFor="confirm-password" className="block text-md font-medium text-gray-700">
+                  <label
+                    htmlFor="confirm-password"
+                    className="block text-md font-medium text-gray-700"
+                  >
                     Confirm Password
                   </label>
                   <input
@@ -159,7 +200,10 @@ const ForgotPassword = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="w-full mt-4 py-2 text-lg font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">
+                <button
+                  type="submit"
+                  className="w-full mt-4 py-2 text-lg font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600"
+                >
                   Reset Password
                 </button>
               </>

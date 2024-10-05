@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../../Config/store";
 import { register } from "../../Config/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     fname: "",
@@ -10,10 +13,10 @@ const Signup = () => {
     email: "",
     phone: "",
     password: "",
-    role: ""
+    role: "",
   });
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -21,19 +24,19 @@ const Signup = () => {
     }));
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
       // Adjust role_id based on the selected role
-      const roleId = formData.role === "owner" ? 3 : 2; // Example IDs
+      const roleId = formData.role === "owner" ? 2 : 3; // Example IDs
       const payload = {
         ...formData,
         role_id: roleId,
       };
-      
+
       // Dispatch the register action with the payload
       await dispatch(register(payload));
-      // Optionally redirect or show success message here
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed", error);
       // Handle the error appropriately (show notification, etc.)
@@ -92,7 +95,10 @@ const Signup = () => {
 
             <div className="mb-4 flex space-x-4">
               <div className="w-1/2">
-                <label htmlFor="fname" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="fname"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   First Name
                 </label>
                 <input
@@ -106,7 +112,10 @@ const Signup = () => {
                 />
               </div>
               <div className="w-1/2">
-                <label htmlFor="lname" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="lname"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Last Name
                 </label>
                 <input
@@ -122,7 +131,10 @@ const Signup = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -137,7 +149,10 @@ const Signup = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Phone
               </label>
               <input
@@ -152,7 +167,10 @@ const Signup = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input

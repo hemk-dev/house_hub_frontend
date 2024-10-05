@@ -1,73 +1,46 @@
 import "./App.css";
-import ForgotPassword from "./modules/Auth/ForgotPassword";
-import Home from "./Pages/Home";
-import Login from "./modules/Auth/Login";
-import Signup from "./modules/Auth/Signup";
-import UserPublicRoute from "./Layout/User/UserPublicLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import List from "./modules/Property/List";
-
-import AdminPrivateRoute from "./Layout/Admin/AdminPrivateRoute";
+import Home from "./Pages/Home";
 import Dashboard from "./modules/Dashboard/Dashboard";
-import LandingPage from "./modules/Dashboard/pages/LandingPage";
-import PropertyList from "./modules/Dashboard/Components/PropertyList";
+import UserPublicRoute from "./Layout/User/UserPublicLayout"; // Assuming you have a public layout
+import RoleBasedRoute from "./Layout/RoleBasedRoute";
+import Signup from "./modules/Auth/Signup";
+import Login from "./modules/Auth/Login";
+import ForgotPassword from "./modules/Auth/ForgotPassword";
 
 function App() {
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<UserPublicRoute component={Home} />} />
-          <Route path="/register" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route
-            path="/dashboard/*"
-            element={<AdminPrivateRoute component={Dashboard} />}
-          >
-            <Route
-              path="landingpage"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="properties"
-              element={<AdminPrivateRoute component={PropertyList} />}
-            />
-            <Route
-              path="order"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="order/orderDetails/:id"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="user"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="addProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="getProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="updateProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-            <Route
-              path="deleteProduct"
-              element={<AdminPrivateRoute component={LandingPage} />}
-            />
-          </Route>
-        </Routes>
-      </Router>
-      {/* <Navbar /> */}
-      {/* <List /> */}
-      {/* <Home /> */}
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<UserPublicRoute component={Home} />} />
+        <Route path="/login" element={<UserPublicRoute component={Login} />} />
+        <Route
+          path="/register"
+          element={<UserPublicRoute component={Signup} />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<UserPublicRoute component={ForgotPassword} />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <RoleBasedRoute allowedRoles={[1, 2]}>
+              <Dashboard />
+            </RoleBasedRoute>
+          }
+        />
+
+        {/* Example of how to add more public routes for buyers or other roles
+        <Route
+          path="/some-other-route"
+          element={<RoleBasedRoute allowedRoles={[2, 3]}>
+
+          </RoleBasedRoute>}
+        /> */}
+      </Routes>
+    </Router>
   );
 }
 

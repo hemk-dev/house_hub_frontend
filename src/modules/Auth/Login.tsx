@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../../Config/store";
 import { doLogin } from "../../Config/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -21,8 +23,8 @@ const Login = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      // Dispatch the login action with the form data
       await dispatch(doLogin(formData));
+      navigate("/");
       // Optionally redirect or show success message here
     } catch (error) {
       console.error("Login failed", error);
@@ -53,38 +55,6 @@ const Login = () => {
           <h2 className="text-3xl font-normal text-center mb-8">LOGIN</h2>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <span className="block text-sm font-medium text-gray-700 mb-2">
-                You are:
-              </span>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    id="buyer"
-                    name="role"
-                    value="buyer"
-                    checked={formData.role === 3}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  Buyer
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    id="owner"
-                    name="role"
-                    value="owner"
-                    checked={formData.role === 2}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  Owner
-                </label>
-              </div>
-            </div>
-
             <div className="mb-4">
               <label
                 htmlFor="email"
@@ -123,7 +93,7 @@ const Login = () => {
               />
               <div className="text-right mt-1">
                 <a
-                  href="/forgotpassword"
+                  href="/forgot-password"
                   className="text-red-500 text-sm hover:underline"
                 >
                   Forgot Password?

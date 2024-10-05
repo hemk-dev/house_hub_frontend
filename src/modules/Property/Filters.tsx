@@ -27,7 +27,7 @@ const Filters: React.FC<FiltersProps> = ({
     country: [] as string[],
     owner: [] as string[],
   });
-  
+
   // Fetch the dynamic filter options from the API
   useEffect(() => {
     const fetchFilterOptions = async () => {
@@ -51,10 +51,10 @@ const Filters: React.FC<FiltersProps> = ({
   }, []);
 
   return (
-    <div className="w-1/5 bg-red-500 p-4 border-r border-gray-200 h-screen ">
+    <div className="w-1/5 bg-red-500 p-4 border-r border-gray-200 h-screen">
       <h3 className="text-2xl font-sans mb-6 text-white">Filter Properties</h3>
 
-      {/*Rent Filter */}
+      {/* Rent Filter */}
       <div className="flex gap-4">
         <div className="mb-4">
           <label
@@ -67,7 +67,7 @@ const Filters: React.FC<FiltersProps> = ({
             type="number"
             id="minRent"
             name="minRent"
-            value={filters.minRent || 0}
+            value={filters.minRent !== null ? filters.minRent : ""}
             onChange={handleFilterChange}
             className="w-full border border-gray-300 rounded-md p-2 outline-none"
             placeholder="Minimum Rent"
@@ -85,7 +85,7 @@ const Filters: React.FC<FiltersProps> = ({
             type="number"
             id="maxRent"
             name="maxRent"
-            value={filters.maxRent || 0}
+            value={filters.maxRent !== null ? filters.maxRent : ""}
             onChange={handleFilterChange}
             className="w-full border border-gray-300 rounded-md p-2 outline-none"
             placeholder="Maximum Rent"
@@ -105,7 +105,7 @@ const Filters: React.FC<FiltersProps> = ({
             type="number"
             id="minDeposit"
             name="minDeposit"
-            value={filters.minDeposit || 0}
+            value={filters.minDeposit !== null ? filters.minDeposit : ""}
             onChange={handleFilterChange}
             className="w-full border border-gray-300 rounded-md p-2"
             placeholder="Minimum Deposit"
@@ -114,8 +114,8 @@ const Filters: React.FC<FiltersProps> = ({
 
         <div className="mb-4">
           <label
-            htmlFor="maxRent"
-            className="block text-sm font-medium text-white mb-1 "
+            htmlFor="maxDeposit"
+            className="block text-sm font-medium text-white mb-1"
           >
             Max Deposit (₹)
           </label>
@@ -123,7 +123,7 @@ const Filters: React.FC<FiltersProps> = ({
             type="number"
             id="maxDeposit"
             name="maxDeposit"
-            value={filters.maxDeposit || 0}
+            value={filters.maxDeposit !== null ? filters.maxDeposit : ""}
             onChange={handleFilterChange}
             className="w-full border border-gray-300 rounded-md p-2 outline-none"
             placeholder="Maximum Deposit"
@@ -140,7 +140,7 @@ const Filters: React.FC<FiltersProps> = ({
           <select
             id="BHK"
             name="BHK"
-            value={filters.BHK || ''}
+            value={filters.BHK || ""}
             onChange={handleFilterChange}
             className="w-full border border-gray-300 rounded-md p-2 outline-none"
           >
@@ -148,7 +148,7 @@ const Filters: React.FC<FiltersProps> = ({
             <option value={1}>1 BHK</option>
             <option value={2}>2 BHK</option>
             <option value={3}>3 BHK</option>
-            <option value={4}>4 BHk</option>
+            <option value={4}>4 BHK</option>
           </select>
         </div>
 
@@ -168,12 +168,13 @@ const Filters: React.FC<FiltersProps> = ({
             className="w-full border border-gray-300 rounded-md p-2 outline-none"
           >
             <option value={0}>Any</option>
-            <option value={0}>Furnished</option>
-            <option value={1}>Semi-Furnished</option>
-            <option value={2}>Unfurnished</option>
+            <option value={1}>Furnished</option>
+            <option value={2}>Semi-Furnished</option>
+            <option value={3}>Unfurnished</option>
           </select>
         </div>
       </div>
+
       {/* Country Filter */}
       <div className="mb-4">
         <label
@@ -220,6 +221,7 @@ const Filters: React.FC<FiltersProps> = ({
             ))}
           </select>
         </div>
+
         <div className="mb-4 w-2/4">
           <label
             htmlFor="city"
@@ -243,16 +245,17 @@ const Filters: React.FC<FiltersProps> = ({
           </select>
         </div>
       </div>
+
       <div className="mb-4">
         <label
-          htmlFor="state"
+          htmlFor="owner"
           className="block text-sm font-medium text-white mb-1"
         >
           Owner
         </label>
         <select
-          id="state"
-          name="state"
+          id="owner"
+          name="owner"
           onChange={handleFilterChange}
           className="w-full border border-gray-300 rounded-md p-2 outline-none"
         >

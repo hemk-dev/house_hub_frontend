@@ -75,7 +75,7 @@ const List: React.FC = () => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value
-        ? name === "bhk" || name === "furnishing"
+        ? name === "BHK" || name === "furnishing"
           ? Number(value)
           : value
         : null,
@@ -173,11 +173,11 @@ const List: React.FC = () => {
                           furnishing
                         </p>
                         <p className="text-md truncate">
-                          {property.furnishing === 0
+                          {property.furnishing === 1
                             ? "Unfurnished"
-                            : property.furnishing === 1
-                            ? "Furnished"
                             : property.furnishing === 2
+                            ? "Furnished"
+                            : property.furnishing === 3
                             ? "Semi-furnished"
                             : ""}
                         </p>

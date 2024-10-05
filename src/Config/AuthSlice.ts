@@ -4,6 +4,7 @@ import api from "./api";
 import { AppThunk } from "./store";
 import { stringEncryption } from "./Global";
 import API_URL from "./apiUrl";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthState {
   appLoading: boolean;
@@ -81,16 +82,12 @@ export const doLogin =
     try {
       dispatch(start());
       const response = await api.post(API_URL.LOGIN, action);
-      if (action?.remember) {
-        const string = JSON.stringify({
-          email: action.username,
-          password: action.password,
-        });
-        localStorage.setItem("remember_me", stringEncryption(string));
-      } else {
-        localStorage.removeItem("remember_me");
-      }
       localStorage.setItem("token", response.data.token);
+
+      const decodedToken: any = jwtDecode(response.data.token);
+      const userRole = decodedToken.roleId;
+
+      localStorage.setItem("role", userRole);
       dispatch(success(response.data));
       dispatch(setUserToken(response.data.token));
 
@@ -108,6 +105,7 @@ export const doLogout = (): AppThunk<any> => async (dispatch) => {
     dispatch(setUserDetail(null));
     dispatch(setInitialData(null));
     localStorage.removeItem("token");
+    localStorage.removeItem("role"); // Clear the role on logout
     return Promise.resolve(response.data);
   } catch (error: any) {
     return Promise.reject(error.data);
@@ -128,26 +126,26 @@ export const forgotPassword =
     }
   };
 
-  export const verifyOtp =
+export const verifyOtp =
   (action: any): AppThunk<any> =>
   async (dispatch) => {
     try {
       dispatch(start());
-      const response = await api.post(API_URL.VERIFY_OTP, action);
-      dispatch(success(response.data));
-      return Promise.resolve(response.data);
+      const response: any = await api.post(API_URL.VERIFY_OTP, action);
+      dispatch(success(response));
+      return Promise.resolve(response);
     } catch (error: any) {
       dispatch(failure());
       return Promise.reject(error.data);
     }
   };
 
-  export const resetPassword =
+export const resetPassword =
   (action: any): AppThunk<any> =>
   async (dispatch) => {
     try {
       dispatch(start());
-      const response = await api.post(API_URL.RESET_PASSWORD, action);
+      const response = await api.put(API_URL.RESET_PASSWORD, action);
       dispatch(success(response.data));
       return Promise.resolve(response.data);
     } catch (error: any) {
