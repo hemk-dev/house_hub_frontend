@@ -138,7 +138,11 @@ export const createProperty =
   async (dispatch) => {
     try {
       dispatch(start());
-      const response = await api.post(API_URL.PROPERTY_CREATE, propertyData);
+      const response = await api.post(API_URL.PROPERTY_CREATE, propertyData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure correct header
+        },
+      });
       dispatch(success());
       await dispatch(fetchPropertyData());
       return Promise.resolve(response.data);

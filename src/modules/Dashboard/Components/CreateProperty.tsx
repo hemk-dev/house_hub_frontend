@@ -8,10 +8,12 @@ import {
   Row,
   Col,
   InputNumber,
+  Upload,
 } from "antd";
 import { useAppDispatch, useAppSelector } from "../../../Config/store";
 import { createProperty } from "../utils/slice";
 import { assignErrorToInput } from "../../../Config/api";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 interface CreatePropertyProps {
   visible: boolean;
@@ -25,19 +27,48 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [fileList, setFileList] = useState<any[]>([]); // State for storing file list
   const loading = useAppSelector((state) => state.dashboard.isLoading);
 
   const onFinish = async (values: any) => {
-    console.log("Form Values: ", values);
+    const formData = new FormData();
+    console.log(values);
+    // Append non-file fields (text values)
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        if (
+          typeof values[key] === "object" &&
+          values[key] !== null &&
+          !(values[key] instanceof File)
+        ) {
+          formData.append(key, JSON.stringify(values[key])); // Serialize nested objects/arrays
+        } else {
+          formData.append(key, values[key]); // Append regular text values
+        }
+      }
+    }
+
+    console.log(
+      "Logging specific fields from formData (before appending files):"
+    );
+    console.log("Name:", formData.get("name"));
+    console.log("Address:", formData.get("address"));
+    console.log("Property Status:", formData.get("status"));
+    console.log("City:", formData.get("city"));
+    // Continue for other fields as needed
+
+    // Now append the files to FormData
+    fileList.forEach((file) => {
+      formData.append("photos", file.originFileObj); // Append each file
+    });
+    // Log FormData again after appending images
+    console.log("Photos:", formData.getAll("photos")); // Log all appended photos
+
+    console.log("Form Data: ", formData);
     try {
-      await dispatch(
-        createProperty({
-          ...values,
-          furnishing: values.furnishing === "Yes" ? 1 : 0,
-          status: values.property_status === "Occupied" ? 1 : 0,
-        })
-      );
+      await dispatch(createProperty(formData));
       form.resetFields();
+      setFileList([]); // Reset file list after submission
       onClose();
       console.log("Property created successfully");
     } catch (error) {
@@ -45,7 +76,6 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
       assignErrorToInput(form);
     }
   };
-
   const onValuesChange = (changedValues: any) => {
     const fieldsValue = form.getFieldsValue();
     // Check if all required fields are filled
@@ -53,6 +83,10 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
       (value) => value !== undefined && value !== ""
     );
     setIsSubmitDisabled(!allFieldsFilled);
+  };
+
+  const handleFileChange = ({ fileList: newFileList }: any) => {
+    setFileList(newFileList);
   };
 
   return (
@@ -158,7 +192,6 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
               <Radio.Group>
                 <Radio value="Apartment">Apartment</Radio>
                 <Radio value="House">House</Radio>
-                <Radio value="Condo">Condo</Radio>
                 <Radio value="Villa">Villa</Radio>
                 <Radio value="Townhouse">Townhouse</Radio>
               </Radio.Group>
@@ -179,14 +212,14 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
           <Col span={12}>
             <Form.Item
               label="Property Status"
-              name="property_status"
+              name="status"
               rules={[
                 { required: true, message: "Please select property status" },
               ]}
             >
               <Radio.Group>
-                <Radio value="Occupied">Occupied</Radio>
-                <Radio value="Vacant">Vacant</Radio>
+                <Radio value={0}>Occupied</Radio>
+                <Radio value={1}>Vacant</Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
@@ -199,8 +232,9 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
               ]}
             >
               <Radio.Group>
-                <Radio value="Yes">Yes</Radio>
-                <Radio value="No">No</Radio>
+                <Radio value={1}>Unfurnished</Radio>
+                <Radio value={2}>Furnished</Radio>
+                <Radio value={3}>Semi-Furnished</Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
@@ -298,6 +332,24 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
           </Col>
         </Row>
 
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item label="Photos">
+              <Upload
+                multiple
+                fileList={fileList}
+                beforeUpload={() => false} // Prevent auto-upload
+                onChange={handleFileChange} // Handle file selection
+                listType="picture"
+              >
+                <Button type="dashed" icon={<MdOutlineFileUpload />}>
+                  Upload Photos
+                </Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item>
           <Button
             type="primary"
@@ -307,7 +359,14 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
           >
             Submit
           </Button>
-          <Button onClick={onClose} style={{ marginLeft: 8 }}>
+
+          <Button
+            type="primary"
+            color="red-6"
+            danger
+            onClick={onClose}
+            style={{ marginLeft: 8 }}
+          >
             Cancel
           </Button>
         </Form.Item>

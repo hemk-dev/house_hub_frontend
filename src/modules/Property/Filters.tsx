@@ -28,6 +28,21 @@ const Filters: React.FC<FiltersProps> = ({
     owner: [] as string[],
   });
 
+  const handleResetFilters = () => {
+    resetFilters();
+
+    // Update the URL (you can customize this as needed)
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.delete("city");
+    newUrl.searchParams.delete("BHK");
+    newUrl.searchParams.delete("minRent");
+    newUrl.searchParams.delete("maxRent");
+    newUrl.searchParams.delete("minDeposit");
+    newUrl.searchParams.delete("maxDeposit");
+    newUrl.searchParams.delete("furnishing");
+    // Add any other filter parameters you want to clear
+    window.history.pushState({}, "", newUrl.toString());
+  };
   // Fetch the dynamic filter options from the API
   useEffect(() => {
     const fetchFilterOptions = async () => {
@@ -51,7 +66,7 @@ const Filters: React.FC<FiltersProps> = ({
   }, []);
 
   return (
-    <div className="w-1/5 bg-red-500 p-4 border-r border-gray-200 h-screen">
+    <div className=" w-1/5 bg-red-500 p-4 border-r border-gray-200 h-screen">
       <h3 className="text-2xl font-sans mb-6 text-white">Filter Properties</h3>
 
       {/* Rent Filter */}
@@ -269,7 +284,7 @@ const Filters: React.FC<FiltersProps> = ({
       </div>
 
       <button
-        onClick={resetFilters}
+        onClick={handleResetFilters}
         className="mt-4 px-4 py-2 w-full bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         Reset Filters

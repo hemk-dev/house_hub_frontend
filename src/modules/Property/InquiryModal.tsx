@@ -1,99 +1,103 @@
+import { Button } from "antd";
 import React, { useState } from "react";
 
-interface ModalProps {
+interface InquiryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  propertyId: string;
+  propertyId: string | null; // Change to string | null
+  onSubmit: (data: {
+    name: string;
+    email: string;
+    contact: string;
+    message: string;
+    property_id: string;
+  }) => void;
 }
 
-const InquiryModal: React.FC<ModalProps> = ({ isOpen, onClose, propertyId }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    contact: "",
-    message: "I am interested in the property. Can you provide more details?",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+const InquiryModal: React.FC<InquiryModalProps> = ({
+  isOpen,
+  onClose,
+  propertyId,
+  onSubmit,
+}) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Submit form logic here, e.g., sending data to backend API
-    console.log("Form submitted: ", { ...formData, propertyId });
-    onClose(); // Close the modal after form submission
+    if (propertyId) {
+      onSubmit({ name, email, contact, message, property_id: propertyId }); // Use propertyId directly
+      onClose(); // Close the modal after submission
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h2 className="text-lg font-semibold mb-4">Submit a Inquiry</h2>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-700 bg-opacity-80 backdrop-blur-sm">
+      <div className="bg-white p-8 rounded shadow-lg w-1/3 h-[70%]">
+        <h2 className="text-xl font-bold mb-4">Enquire Now</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Name</label>
+            <label className="block mb-1">Name:</label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded my-2"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="border p-2 w-full"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Email</label>
+            <label className="block mb-1">Email:</label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-2 border rounded my-2"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border p-2 w-full"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Contact</label>
+            <label className="block mb-1">Contact:</label>
             <input
               type="tel"
-              name="contact"
-              value={formData.contact}
-              onChange={handleChange}
-              className="w-full p-2 border rounded my-2"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              className="border p-2 w-full"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium">Message</label>
+            <label className="block mb-1">Message:</label>
             <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              className="w-full p-2 border rounded my-2"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="border p-2 w-full h-24" // Increase height for textarea
               required
             />
           </div>
-          <input type="hidden" value={propertyId} />
-          <div className="flex justify-end p-2">
-            <button
-              type="button"
+          <div className="flex justify-center items-center gap-6 w-full">
+            <Button
+              className="text-md p-5 w-1/2"
+              size="large"
+              type="primary"
+              danger
+              htmlType="submit"
               onClick={onClose}
-              className="bg-gray-300 text-black px-4 py-2 rounded-lg mr-2 hover:bg-gray-300 hover:shadow-sm hover:shadow-gray-500"
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-red-500 text-white px-4 py-2 rounded-lg  hover:bg-red-500 hover:shadow-sm hover:shadow-red-700"
+            </Button>
+            <Button
+              className="text-md p-5 w-1/2"
+              size="large"
+              type="primary"
+              htmlType="submit"
             >
               Submit
-            </button>
+            </Button>
           </div>
         </form>
       </div>

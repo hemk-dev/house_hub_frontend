@@ -11,45 +11,53 @@ import PropertyList from "./modules/Dashboard/pages/PropertyList";
 import UserList from "./modules/Dashboard/pages/UserList";
 import InquiryList from "./modules/Dashboard/pages/InquiryList";
 import List from "./modules/Property/List";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 function App() {
+  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY!);
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<UserPublicRoute component={Home} />} />
-        <Route path="/login" element={<UserPublicRoute component={Login} />} />
-        <Route
-          path="/register"
-          element={<UserPublicRoute component={Signup} />}
-        />
-        <Route path="/list" element={<UserPublicRoute component={List} />} />
-        <Route
-          path="/forgot-password"
-          element={<UserPublicRoute component={ForgotPassword} />}
-        />
+    <Elements stripe={stripePromise}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<UserPublicRoute component={Home} />} />
+          <Route
+            path="/login"
+            element={<UserPublicRoute component={Login} />}
+          />
+          <Route
+            path="/register"
+            element={<UserPublicRoute component={Signup} />}
+          />
+          <Route path="/list" element={<UserPublicRoute component={List} />} />
+          <Route
+            path="/forgot-password"
+            element={<UserPublicRoute component={ForgotPassword} />}
+          />
 
-        <Route
-          path="/dashboard"
-          element={
-            <RoleBasedRoute allowedRoles={[1, 2]}>
-              <Dashboard />
-            </RoleBasedRoute>
-          }
-        >
-          <Route path="properties" element={<PropertyList />} />
-          <Route path="users" element={<UserList />} />
-          <Route path="inquiry" element={<InquiryList />} />
-        </Route>
+          <Route
+            path="/dashboard"
+            element={
+              <RoleBasedRoute allowedRoles={[1, 2]}>
+                <Dashboard />
+              </RoleBasedRoute>
+            }
+          >
+            <Route path="properties" element={<PropertyList />} />
+            <Route path="users" element={<UserList />} />
+            <Route path="inquiry" element={<InquiryList />} />
+          </Route>
 
-        {/* Example of how to add more public routes for buyers or other roles
+          {/* Example of how to add more public routes for buyers or other roles
         <Route
           path="/some-other-route"
           element={<RoleBasedRoute allowedRoles={[2, 3]}>
 
           </RoleBasedRoute>}
         /> */}
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </Elements>
   );
 }
 

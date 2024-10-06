@@ -5,6 +5,8 @@
 *{
   padding: 0;
   margin: 0;
-  overflow-y: scroll; /* Enable vertical scrolling */
+  overflow-y: hidden; /* Enable vertical scrolling */
   scrollbar-width: none;
 }
+
+

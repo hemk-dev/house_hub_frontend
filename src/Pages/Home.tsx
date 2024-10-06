@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaMapMarkerAlt, FaRupeeSign, FaSearch } from "react-icons/fa";
 import { HiHome } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // State variables to capture user input
+  const [location, setLocation] = useState("");
+  const [bhk, setBhk] = useState(""); // For storing BHK value
+  const [minRent, setMinRent] = useState(""); // For storing minimum rent
+
+  const handleSearch = () => {
+    // Construct the query parameters
+    const queryParams = new URLSearchParams({
+      city: location,
+      BHK: bhk,
+      minRent: minRent,
+    }).toString();
+
+    // Navigate to the listing page with the query parameters
+    navigate(`/list?${queryParams}`);
+  };
+
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-center">
       {/* Hero Section */}
@@ -24,23 +43,40 @@ const Home = () => {
               className="focus:outline-none bg-transparent text-gray-600 w-full"
               type="text"
               placeholder="Location, City"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
 
           {/* Flat Type Section */}
           <div className="flex items-center gap-2 border-l border-gray-300 px-4 flex-grow">
             <HiHome className="text-red-500" />
-            <span className="text-gray-600">Flat +8</span>
+            <input
+              className="focus:outline-none bg-transparent text-gray-600 w-full"
+              type="text"
+              placeholder="BHK"
+              value={bhk}
+              onChange={(e) => setBhk(e.target.value)}
+            />
           </div>
 
           {/* Budget Section */}
           <div className="flex items-center gap-2 border-l border-gray-300 px-4 flex-grow">
             <FaRupeeSign className="text-red-500" />
-            <span className="text-gray-600">Budget</span>
+            <input
+              className="focus:outline-none bg-transparent text-gray-600 w-full"
+              type="number"
+              placeholder="Min Rent"
+              value={minRent}
+              onChange={(e) => setMinRent(e.target.value)}
+            />
           </div>
 
           {/* Search Button */}
-          <button className="flex items-center bg-red-500 text-white rounded-full px-6 py-3 gap-2">
+          <button
+            onClick={handleSearch}
+            className="flex items-center bg-red-500 text-white rounded-full px-6 py-3 gap-2"
+          >
             <FaSearch />
             Search
           </button>

@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full py-4 px-8 flex justify-between items-center shadow-md">
+    <div className=" w-full py-4 px-8 flex justify-between items-center shadow-md">
       <Link to="/" className="text-2xl font-bold">
         House Hub
       </Link>
