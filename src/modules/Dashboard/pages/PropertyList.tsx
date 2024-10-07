@@ -119,12 +119,12 @@ const PropertyList: React.FC = () => {
   return (
     <Layout>
       <Header className="bg-white p-4">
-        <Row justify="space-between" align="middle">
+        <Row justify="space-between" align="top">
           {/* Breadcrumb on the left */}
           <Col>
-            <Breadcrumb className="">
+            <Breadcrumb>
               <Breadcrumb.Item>
-                <span onClick={() => navigate("/dashboard")} className="cursor-pointer text-black font-bold">
+                <span onClick={() => navigate("/dashboard/landingpage")} className="cursor-pointer text-black font-bold">
                   Dashboard
                 </span>
               </Breadcrumb.Item>
@@ -133,7 +133,7 @@ const PropertyList: React.FC = () => {
           </Col>
           {/* Create Property Button on the right */}
           <Col>
-            <Button type="primary" onClick={() => setCreateVisible(true)}>
+            <Button type="primary"  onClick={() => setCreateVisible(true)}>
               Create Property
             </Button>
           </Col>
@@ -141,7 +141,7 @@ const PropertyList: React.FC = () => {
       </Header>
 
       {/* Add margin-top to create gap between header and table */}
-      <Content className="mt-4" style={{ padding: "20px" }}>
+      <Content style={{ padding: "10px", marginTop: "20px" }}>
         <Table<PropertyType> columns={columns} dataSource={dataSource} loading={loading} />
       </Content>
 

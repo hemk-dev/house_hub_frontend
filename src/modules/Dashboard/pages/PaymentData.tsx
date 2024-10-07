@@ -2,98 +2,89 @@ import React, { useEffect, useState } from "react";
 import { Button, Space, Table, Breadcrumb, Layout, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom"; // For navigation
 import { useAppDispatch, useAppSelector } from "../../../Config/store";
-import { fetchInqiryList, fetchPaymentData, inquiryStatusUpdateById } from "../utils/slice"; // Adjusted the import for status update
+import { fetchPaymentData } from "../utils/slice"; // Adjusted the import for fetching payment data
 
 const { Header, Content } = Layout;
 
-interface InquiryType {
+interface PaymentDataType {
   key: string;
-  inquiryId: string;
-  name: string;
-  email: string;
-  contact: string;
-  message: string;
   propertyName: string;
+  buyerName: string;
+  ownerName: string;
+  amount: string;
   status: boolean;
+  createdDate: string; // Assuming createdDate is a string (e.g., ISO date)
 }
 
 const PaymentData: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const data = useAppSelector((state) => state.dashboard.inquiryData); // Fetch inquiry data from Redux store
+  // const data = useAppSelector((state) => state.dashboard.paymentData); // Fetch payment data from Redux store
   const navigate = useNavigate(); // Hook for navigation
+  const [properties, setProperties] = useState<any>();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await dispatch(fetchPaymentData());
+      const response = await fetch(
+        `http://localhost:5000/properties/transactions`
+      );
+      const data = await response.json();
+      console.log("🚀 ~ fetchData ~ data:", data);
+      setProperties(data);
+      // await dispatch(fetchPaymentData());
       setLoading(false);
     };
     fetchData();
   }, [dispatch]);
 
-  // Map inquiry data to match the table structure
-  const dataSource: InquiryType[] = Array.isArray(data)
-    ? data.map((inquiry: any) => ({
-        key: inquiry.inquiry_inquiry_id,
-        inquiryId: inquiry.inquiry_inquiry_id,
-        name: inquiry.inquiry_name,
-        email: inquiry.inquiry_email,
-        contact: inquiry.inquiry_contact,
-        message: inquiry.inquiry_message,
-        propertyName: inquiry.propertyname,
-        status: inquiry.inquiry_status,
+  // Map payment data to match the table structure
+  const dataSource: PaymentDataType[] = Array.isArray(properties)
+    ? properties.map((payment: any) => ({
+        key: payment.id, // Use the unique ID as key
+        propertyName: payment.property_name,
+        buyerName: payment.buyer_name,
+        ownerName: payment.owner_name,
+        amount: (payment.amount / 100).toFixed(2), // Divide amount by 100 and format it to 2 decimal places
+        status: payment.status,
+        createdDate: new Date(payment.createdAt).toLocaleString(), // Format date as needed
       }))
     : []; // Fallback to empty array if data is not an array
 
-  // Function to handle status update
-  const handleStatusUpdate = async (inquiryId: string) => {
-    setLoading(true);
-    await dispatch(inquiryStatusUpdateById(inquiryId));
-    setLoading(false);
-  };
-
-  // Define columns for the inquiry table
+  // Define columns for the payment table
   const columns = [
-    {
-      title: "Owner Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Contact",
-      dataIndex: "contact",
-      key: "contact",
-    },
-    {
-      title: "Message",
-      dataIndex: "message",
-      key: "message",
-      ellipsis: true, // Truncate long messages
-    },
     {
       title: "Property Name",
       dataIndex: "propertyName",
       key: "propertyName",
     },
     {
+      title: "Buyer Name",
+      dataIndex: "buyerName",
+      key: "buyerName",
+    },
+    {
+      title: "Owner Name",
+      dataIndex: "ownerName",
+      key: "ownerName",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status: boolean, record: InquiryType) => (
-        <Button
-          type={status ? "primary" : "default"}
-          disabled={status ? true : false}
-          onClick={() => handleStatusUpdate(record.inquiryId)}
-        >
-          {status ? "Processed" : "Pending"}
-        </Button>
+      render: (status: boolean) => (
+        <span>{status ? "Processed" : "Pending"}</span>
       ),
+    },
+    {
+      title: "Created Date",
+      dataIndex: "createdDate",
+      key: "createdDate",
     },
   ];
 
@@ -104,18 +95,25 @@ const PaymentData: React.FC = () => {
           <Col>
             <Breadcrumb>
               <Breadcrumb.Item>
-                <span onClick={() => navigate("/dashboard")} className="cursor-pointer text-black font-bold">
+                <span
+                  onClick={() => navigate("/dashboard/landingpage")}
+                  className="cursor-pointer text-black font-bold"
+                >
                   Dashboard
                 </span>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>Inquiries</Breadcrumb.Item>
+              <Breadcrumb.Item>Payments</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
         </Row>
       </Header>
 
       <Content className="mt-4" style={{ padding: "20px" }}>
-        <Table<InquiryType> columns={columns} dataSource={dataSource} loading={loading} />
+        <Table<PaymentDataType>
+          columns={columns}
+          dataSource={dataSource}
+          loading={loading}
+        />
       </Content>
     </Layout>
   );

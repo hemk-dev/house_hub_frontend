@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaMapMarkerAlt, FaRupeeSign, FaSearch } from "react-icons/fa";
 import { HiHome } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
-
 const Home = () => {
   const navigate = useNavigate();
 
@@ -34,10 +33,10 @@ const Home = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="my-8 border border-gray-300 py-2 px-3 rounded-full w-full max-w-2xl mx-auto">
+      <div className="my-8 border border-gray-400 py-2 px-3 rounded-full w-full max-w-2xl mx-auto">
         <div className="flex items-center gap-4">
           {/* Location Section */}
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 flex-grow">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 flex-grow">
             <FaMapMarkerAlt className="text-red-500" />
             <input
               className="focus:outline-none bg-transparent text-gray-600 w-full"
@@ -75,10 +74,10 @@ const Home = () => {
           {/* Search Button */}
           <button
             onClick={handleSearch}
-            className="flex items-center bg-red-500 text-white rounded-full px-6 py-3 gap-2"
+            className="flex items-center bg-red-500 text-white rounded-full px-5 py-2 w-1/4 gap-2"
           >
-            <FaSearch />
-            Search
+            <FaSearch className="text-xl text-white" />
+            <p>Search</p>
           </button>
         </div>
       </div>
@@ -88,14 +87,17 @@ const Home = () => {
         <HighlightCard
           title="Discover 100+ rental options just for you!"
           linkText="See all"
+          link="/list"
         />
         <HighlightCard
           title="100+ owner properties available for you!"
           linkText="See all"
+          link="/list"
         />
         <HighlightCard
           title="Browse 100+ homes in popular locations!"
           linkText="See all"
+          link="/list"
         />
       </div>
     </div>
@@ -106,14 +108,16 @@ const Home = () => {
 const HighlightCard = ({
   title,
   linkText,
+  link,
 }: {
   title: string;
   linkText: string;
+  link: string; // Add link prop
 }) => (
   <div className="p-4 border rounded-lg shadow-md bg-red-100 text-center">
     <h3 className="text-lg font-semibold">{title}</h3>
     <Link
-      to="#"
+      to={link} // Use the link prop here
       className="text-red-500 font-medium mt-2 inline-block hover:underline"
     >
       {linkText} →

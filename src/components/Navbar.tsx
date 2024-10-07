@@ -20,8 +20,8 @@ const Navbar = () => {
       </Link>
       <div className="flex items-center">
         {isAuthenticated && (roleId === "1" || roleId === "2") && (
-          <Link to="/dashboard" className="mr-4">
-            <button className="text-gray-600 hover:text-black">
+          <Link to="/dashboard/landingpage" className="mr-4">
+            <button className="hover:text-red-500 text-gray-600">
               Dashboard
             </button>
           </Link>
@@ -29,7 +29,7 @@ const Navbar = () => {
         {isAuthenticated ? (
           <button
             onClick={handleLogout}
-            className="text-gray-600 hover:text-black"
+            className="text-gray-600 hover:text-red-500 "
           >
             Logout
           </button>

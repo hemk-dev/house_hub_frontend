@@ -111,12 +111,19 @@ export const fetchPaymentData = (): AppThunk => async (dispatch) => {
   try {
     dispatch(start());
     const response = await api.get(API_URL.PAYMENT_LIST);
+    console.log("🚀 ~ fetchPaymentData ~ response:", response);
     dispatch(success());
-    dispatch(setInquiryData(response.data));
-    return Promise.resolve(response.data);
+    dispatch(setPaymentData(response.data));
+    return await Promise.resolve(response.data);
   } catch (error: any) {
+    console.log(
+      "aaaaaaaaaaaaaaaaaaaa",
+      error.response ? error.response.data : error.message
+    );
     dispatch(failure());
-    return Promise.reject(error.response ? error.response.data : error.message);
+    return await Promise.reject(
+      error.response ? error.response.data : error.message
+    );
   }
 };
 

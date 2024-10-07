@@ -11,6 +11,7 @@ import PaymentModal from "../../components/PaymentModal";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { Tooltip } from "antd";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
+import ImageCarouselModal from "../../components/ImageCarouselModal";
 
 interface Property {
   id: number;
@@ -41,17 +42,23 @@ const List: React.FC = () => {
   const query = new URLSearchParams(location.search);
   const [filters, setFilters] = useState<{
     city: string;
+    state: string;
+    country: string;
     BHK: number | null;
     minRent: number | null;
     maxRent: number | null;
+    owner_name: string | null;
     minDeposit: number | null;
     maxDeposit: number | null;
     furnishing: number | null;
   }>({
     city: query.get("city") || "",
+    state: query.get("state") || "",
+    country: query.get("country") || "",
     BHK: query.get("BHK") ? Number(query.get("BHK")) : null,
     minRent: query.get("minRent") ? Number(query.get("minRent")) : null,
     maxRent: query.get("maxRent") ? Number(query.get("maxRent")) : null,
+    owner_name: query.get("owner_name") || "",
     minDeposit: query.get("minDeposit")
       ? Number(query.get("minDeposit"))
       : null,
@@ -69,15 +76,26 @@ const List: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false); // Set type for isLoading
   const [modalOpen, setModalOpen] = useState(false);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
     null
   ); // Change to string | null
+  const openImageModal = (images: string[]) => {
+    setSelectedImages(images);
+    setImageModalVisible(true);
+  };
+
   const fetchProperties = async () => {
     setLoading(true);
     try {
       const params: Record<string, string> = {};
 
       if (filters.city) params.city = filters.city;
+      if (filters.country) params.country = filters.country;
+      if (filters.state) params.state = filters.state;
+      if (filters.owner_name) params.owner_name = filters.owner_name;
       if (filters.BHK !== null) params.BHK = filters.BHK.toString(); // Convert to string
       if (filters.minRent !== null) params.minRent = filters.minRent.toString(); // Convert to string
       if (filters.maxRent !== null) params.maxRent = filters.maxRent.toString(); // Convert to string
@@ -121,12 +139,15 @@ const List: React.FC = () => {
   const resetFilters = () => {
     setFilters({
       city: "",
+      country: "",
+      state: "",
       BHK: null,
       minRent: null,
       maxRent: null,
       maxDeposit: null,
       minDeposit: null,
       furnishing: null,
+      owner_name: "",
     });
   };
 
@@ -289,7 +310,7 @@ const List: React.FC = () => {
   return (
     <div className="flex">
       <Filters
-        filters={filters}
+        filters={filters} 
         handleFilterChange={handleFilterChange}
         resetFilters={resetFilters}
       />
@@ -318,13 +339,14 @@ const List: React.FC = () => {
                             "https://via.placeholder.com/150"
                           }
                           alt="Property"
-                          className="w-full h-[13rem] rounded"
+                          className="w-full h-[13rem] rounded cursor-pointer"
+                          onClick={() => openImageModal(property.photos)}
                         />
                         <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded">
-                          {property.photos.length}+ Photos
+                          {property.photos.length - 1}+ Photos
                         </span>
                       </div>
-                      <span className="text-gray-500 text-xs block mt-2">
+                      <span className="text-gray-500 text-s block mt-2">
                         Posted:{" "}
                         {new Date(property.createdAt).toLocaleDateString()}
                       </span>
@@ -342,6 +364,21 @@ const List: React.FC = () => {
                       <p className="text-sm text-gray-500 mb-1">
                         {property.city}, {property.state}, {property.country}
                       </p>
+                      <p className="text-sm text-gray-500 mb-1  w-fit">
+                        <a
+                          href={`tel:${property.contact}`}
+                          className="hover:underline hover:text-blue-600"
+                        >
+                          {property.contact}
+                        </a>
+                        {" | "}
+                        <a
+                          href={`mailto:${property.email}`}
+                          className="hover:underline hover:text-blue-600"
+                        >
+                          {property.email}
+                        </a>
+                      </p>
 
                       <div className="my-4">
                         <p>
@@ -351,13 +388,13 @@ const List: React.FC = () => {
                         </p>
                       </div>
                       {/* 
-                      <div className="bg-green-100 text-green-600 w-1/5 py-1 rounded text-s text-center items-center">
-                        <span>
-                          {property.availability_status === 2
-                            ? "Available"
-                            : "Not Available"}
-                        </span>
-                      </div> */}
+                        <div className="bg-green-100 text-green-600 w-1/5 py-1 rounded text-s text-center items-center">
+                          <span>
+                            {property.availability_status === 2
+                              ? "Available"
+                              : "Not Available"}
+                          </span>
+                        </div> */}
                       <div className="bg-gray-100 py-4 px-6 rounded-md my-4 grid grid-cols-8 gap-6 relative">
                         {/* First Row of Details */}
                         <div className="col-span-2 space-y-1">
@@ -456,15 +493,6 @@ const List: React.FC = () => {
                     <div className="w-2/7 flex flex-col mx-2 gap-6">
                       {/* Rent, Security Deposit, and Buttons */}
                       <div className="flex flex-col items-center mb-4">
-                        {/* <p className="font-bold text-xl flex ">
-                          ₹{property.security_deposit}{" "}
-                          <span className="mt-1 ml-1">
-                            <IoIosInformationCircleOutline
-                              onMouseEnter={() => setHover(true)}
-                              onMouseLeave={() => setHover(false)}
-                            />
-                          </span>
-                        </p> */}
                         <p className="font-bold text-xl flex ">
                           ₹{property.security_deposit}
                           <Tooltip
@@ -514,11 +542,6 @@ const List: React.FC = () => {
                           Enquire Now
                         </button>
                       </div>
-                      <div>
-                        <p>
-                          <a href="tel:+4733378901">+47 333 78 901</a>
-                        </p>
-                      </div>
                     </div>
                   </li>
                 ))
@@ -535,6 +558,11 @@ const List: React.FC = () => {
         onClose={() => setModalOpen(false)}
         propertyId={selectedPropertyId} // Pass the updated propertyId
         onSubmit={handleSubmitInquiry}
+      />
+      <ImageCarouselModal
+        visible={imageModalVisible}
+        onClose={() => setImageModalVisible(false)}
+        images={selectedImages}
       />
     </div>
   );

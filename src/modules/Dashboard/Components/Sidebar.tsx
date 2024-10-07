@@ -1,6 +1,13 @@
 import React, { useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
+import {
+  IoIosHome,
+  IoIosList,
+  IoIosPeople,
+  IoIosChatbubbles,
+  IoIosCash,
+} from "react-icons/io";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -8,7 +15,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
-  const [selectedLink, setSelectedLink] = useState("LandingPage");
+  const [selectedLink, setSelectedLink] = useState("landingpage");
   const navigate = useNavigate();
   const sidebar = useRef(null);
 
@@ -30,39 +37,52 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   const links = [
-    { name: "Properties", path: "properties" },
-    { name: "Users", path: "users" },
-    { name: "Inquiry", path: "inquiry" },
-    { name: "Transaction", path: "transaction" },
+    {
+      name: "Home",
+      path: "landingpage",
+      icon: <IoIosHome className="text-2xl" />,
+    },
+    {
+      name: "Properties",
+      path: "properties",
+      icon: <IoIosList className="text-2xl" />,
+    },
+    {
+      name: "Users",
+      path: "users",
+      icon: <IoIosPeople className="text-2xl" />,
+    },
+    {
+      name: "Inquiry",
+      path: "inquiry",
+      icon: <IoIosChatbubbles className="text-2xl" />,
+    },
+    {
+      name: "Transaction",
+      path: "transaction",
+      icon: <IoIosCash className="text-2xl" />,
+    },
   ];
 
   return (
     <>
       <aside
         ref={sidebar}
-        className={`absolute text-white left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-red-500 duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
+        className={`absolute w-[15%] text-white left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-red-500 duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between h-16 bg-gray-300 border-b border-gray-200 px-4">
-          <Link
-            to="/dashboard/landingpage"
-            className="text-2xl font-bold text-gray-900 no-underline ml-10 md:ml-0"
-            onClick={() => handleLinkClick("landingpage")}
-          >
-            HouseHub
-          </Link>
-        </div>
         <div className="md:overflow-y-auto">
-          <ul className="py-4 flex justify-between gap-20 flex-col">
+          <ul className="py-4 flex justify-between gap-3 flex-col">
             {links.map((link) => (
               <li
                 key={link.name}
-                className={`cursor-pointer px-6 py-2 ${
-                  selectedLink === link.name && "bg-gray-200"
-                }`}
+                className={`cursor-pointer flex items-center px-6 py-4  hover:bg-gray-700 transition-all ease-in-out delay-75
+                  ${selectedLink === link.name && "bg-gray-200"}
+                  `}
                 onClick={() => handleLinkClick(link.path)}
               >
+                <span className="mr-2">{link.icon}</span> {/* Display icon */}
                 {link.name}
               </li>
             ))}

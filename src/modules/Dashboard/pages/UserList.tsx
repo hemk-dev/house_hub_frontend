@@ -108,7 +108,7 @@ const UserList: React.FC = () => {
           <Col>
             <Breadcrumb>
               <Breadcrumb.Item>
-                <span onClick={() => navigate("/dashboard")} className="cursor-pointer text-black font-bold">
+                <span onClick={() => navigate("/dashboard/landingpage")} className="cursor-pointer text-black font-bold">
                   Dashboard
                 </span>
               </Breadcrumb.Item>
