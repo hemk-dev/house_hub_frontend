@@ -15,6 +15,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentFailed from "./components/PaymentFailed";
+import PaymentData from "./modules/Dashboard/pages/PaymentData";
 
 function App() {
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY!);
@@ -57,6 +58,7 @@ function App() {
             <Route path="properties" element={<PropertyList />} />
             <Route path="users" element={<UserList />} />
             <Route path="inquiry" element={<InquiryList />} />
+            <Route path="transaction" element={<PaymentData />} />
           </Route>
 
           {/* Example of how to add more public routes for buyers or other roles

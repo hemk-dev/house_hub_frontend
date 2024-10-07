@@ -9,6 +9,7 @@ interface AuthState {
   userData: any;
   propertyData: [];
   inquiryData: [];
+  paymentData: [];
   details: any; // Details of a specific record
 }
 
@@ -17,6 +18,7 @@ const initialState: AuthState = {
   userData: null,
   propertyData: [],
   inquiryData: [],
+  paymentData: [],
   details: null,
 };
 
@@ -32,6 +34,9 @@ const dashboardSlice = createSlice({
     },
     setInquiryData: (state, action: PayloadAction<any>) => {
       state.inquiryData = action.payload;
+    },
+    setPaymentData: (state, action: PayloadAction<any>) => {
+      state.paymentData = action.payload;
     },
     start: (state) => {
       state.isLoading = true;
@@ -55,6 +60,7 @@ export const {
   setUserData,
   setPropertyData,
   setInquiryData,
+  setPaymentData,
   setDetails,
 } = dashboardSlice.actions;
 
@@ -91,6 +97,20 @@ export const fetchInqiryList = (): AppThunk => async (dispatch) => {
   try {
     dispatch(start());
     const response = await api.get(API_URL.INQUIRY_LIST);
+    dispatch(success());
+    dispatch(setInquiryData(response.data));
+    return Promise.resolve(response.data);
+  } catch (error: any) {
+    dispatch(failure());
+    return Promise.reject(error.response ? error.response.data : error.message);
+  }
+};
+
+// Fetch payment data
+export const fetchPaymentData = (): AppThunk => async (dispatch) => {
+  try {
+    dispatch(start());
+    const response = await api.get(API_URL.PAYMENT_LIST);
     dispatch(success());
     dispatch(setInquiryData(response.data));
     return Promise.resolve(response.data);

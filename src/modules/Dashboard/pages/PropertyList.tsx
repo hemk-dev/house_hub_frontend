@@ -28,15 +28,33 @@ const PropertyList: React.FC = () => {
   const dispatch = useAppDispatch();
   const properties = useAppSelector((state) => state.dashboard.propertyData);
   const navigate = useNavigate(); // Hook for navigation
-
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      await dispatch(fetchPropertyData());
-      setLoading(false);
+      try {
+        setLoading(true); // Start loading before fetching data
+        await dispatch(fetchPropertyData());
+      } catch (error: any) {
+        // Handle different kinds of errors safely
+        if (error?.response && error.response.status === 404) {
+          console.warn("No properties found!"); // Handle 404 specifically
+        } else if (error?.response?.data?.message) {
+          console.error("Error fetching property data:", error.response.data.message);
+        } else if (error?.message) {
+          console.error("Error:", error.message); // Handle generic error message
+        } else {
+          console.error("An unknown error occurred:", error);
+        }
+      } finally {
+        // Ensure loading is set to false regardless of success or failure
+        setLoading(false);
+      }
     };
+  
     fetchData();
   }, [dispatch]);
+  
+  
+  
 
   const dataSource = properties.map((property: any) => ({
     key: property.id,

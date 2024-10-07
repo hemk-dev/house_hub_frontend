@@ -33,6 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     { name: "Properties", path: "properties" },
     { name: "Users", path: "users" },
     { name: "Inquiry", path: "inquiry" },
+    { name: "Transaction", path: "transaction" },
   ];
 
   return (
