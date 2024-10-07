@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import PaymentModal from "../../components/PaymentModal";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { Tooltip } from "antd";
+import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 interface Property {
   id: number;
@@ -66,10 +67,7 @@ const List: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
-    null
-  ); // State for selected property
-
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Set type for isLoading
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
     null
@@ -168,7 +166,6 @@ const List: React.FC = () => {
     const totalPayable = (securityDeposit + newRent).toFixed(2);
     const formattedDeposit = securityDeposit.toFixed(2);
     const formattedRent = newRent.toFixed(2);
-
     return {
       totalPayable,
       formattedDeposit,
@@ -176,10 +173,6 @@ const List: React.FC = () => {
     };
   };
 
-  const handleBookProperty = (property: Property) => {
-    setSelectedProperty(property);
-    setShowModal(true);
-  };
   const handleDropDownToggle = () => {
     setDropDown(!dropDown);
   };
@@ -235,6 +228,61 @@ const List: React.FC = () => {
         title: "Payment Error",
         text: "There was an error initiating the payment process. Please try again later.",
       });
+    }
+  };
+
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handlePayment = async (e: any, propertyId: any) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!stripe || !elements) {
+      Swal.fire(
+        "Error",
+        "Stripe has not yet loaded. Please try again later.",
+        "error"
+      );
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Create a PaymentIntent on the server to get the client secret
+      const response = await axios.post(
+        "http://localhost:5000/properties/book",
+        { propertyId: propertyId },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      await stripe.redirectToCheckout({
+        sessionId: response.data.sessionId,
+      });
+
+      if (!response.data) {
+        Swal.fire({
+          icon: "error",
+          title: "Payment Error",
+          text: "There was an error initiating the payment process. Please try again later.",
+        });
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Payment Success",
+        text: "Payment successful and property booked!",
+      });
+    } catch (error: any) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please Login to Book Properties",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -455,9 +503,9 @@ const List: React.FC = () => {
                       <div className="space-y-2">
                         <button
                           className="px-4 py-2 w-full bg-red-500 text-white rounded-full hover:bg-red-600"
-                          onClick={() => handleBookProperty(property)}
+                          onClick={(e) => handlePayment(e, property.id)}
                         >
-                          Book
+                          {isLoading ? "Processing..." : "Book Now"}
                         </button>
                         <button
                           className="px-4 py-2 w-full border border-red-500 text-red-500 rounded-full hover:bg-red-50"
@@ -465,6 +513,11 @@ const List: React.FC = () => {
                         >
                           Enquire Now
                         </button>
+                      </div>
+                      <div>
+                        <p>
+                          <a href="tel:+4733378901">+47 333 78 901</a>
+                        </p>
                       </div>
                     </div>
                   </li>
@@ -476,17 +529,6 @@ const List: React.FC = () => {
           </div>
         )}
       </div>
-      {showModal && selectedProperty && (
-        // <PaymentModal
-        //   property={selectedProperty}
-        //   onClose={() => setShowModal(false)}
-        // />
-        <PaymentModal
-          property={selectedProperty}
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-        />
-      )}
 
       <InquiryModal
         isOpen={modalOpen}

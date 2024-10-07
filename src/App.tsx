@@ -13,6 +13,8 @@ import InquiryList from "./modules/Dashboard/pages/InquiryList";
 import List from "./modules/Property/List";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentFailed from "./components/PaymentFailed";
 
 function App() {
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY!);
@@ -33,6 +35,15 @@ function App() {
           <Route
             path="/forgot-password"
             element={<UserPublicRoute component={ForgotPassword} />}
+          />
+          <Route
+            path="/payment-success"
+            element={<UserPublicRoute component={PaymentSuccess} />}
+          />
+
+          <Route
+            path="/payment-failed"
+            element={<UserPublicRoute component={PaymentFailed} />}
           />
 
           <Route
