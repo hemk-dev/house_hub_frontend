@@ -120,7 +120,7 @@ const ForgotPassword = () => {
                   <input
                     type="email"
                     id="email"
-                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                     placeholder="Enter Your Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -148,7 +148,7 @@ const ForgotPassword = () => {
                   <input
                     type="text"
                     id="otp"
-                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                     placeholder="Enter OTP"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
@@ -176,7 +176,7 @@ const ForgotPassword = () => {
                   <input
                     type="password"
                     id="new-password"
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                     placeholder="Enter New Password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -193,7 +193,7 @@ const ForgotPassword = () => {
                   <input
                     type="password"
                     id="confirm-password"
-                    className="mt-1 w-full px-5 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                    className="mt-1 w-full px-5 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                     placeholder="Confirm New Password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}

@@ -381,7 +381,7 @@ const List: React.FC = () => {
                       </p>
 
                       <div className="my-4">
-                        <p>
+                        <p className="max-w-[80%]">
                           {property?.description?.length > 100
                             ? `${property?.description.slice(0, 100)}...`
                             : property?.description}

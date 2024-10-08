@@ -105,7 +105,7 @@ const Signup = () => {
                   type="text"
                   id="fname"
                   name="fname"
-                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                   placeholder="Enter First Name"
                   value={formData.fname}
                   onChange={handleChange}
@@ -122,7 +122,7 @@ const Signup = () => {
                   type="text"
                   id="lname"
                   name="lname"
-                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                   placeholder="Enter Last Name"
                   value={formData.lname}
                   onChange={handleChange}
@@ -141,7 +141,7 @@ const Signup = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                 placeholder="Enter Email"
                 value={formData.email}
                 onChange={handleChange}
@@ -159,7 +159,7 @@ const Signup = () => {
                 type="tel"
                 id="phone"
                 name="phone"
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                 placeholder="Enter Phone Number"
                 value={formData.phone}
                 onChange={handleChange}
@@ -177,7 +177,7 @@ const Signup = () => {
                 type="password"
                 id="password"
                 name="password"
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:outline-red-500 focus:ring-transparent"
                 placeholder="Enter Password"
                 value={formData.password}
                 onChange={handleChange}
