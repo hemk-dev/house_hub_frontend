@@ -183,9 +183,9 @@ const Filters: React.FC<FiltersProps> = ({
             className="w-full border border-gray-300 rounded-md p-2 outline-none"
           >
             <option value={0}>Any</option>
-            <option value={1}>Furnished</option>
-            <option value={2}>Semi-Furnished</option>
-            <option value={3}>Unfurnished</option>
+            <option value={1}>Unfurnished</option>
+            <option value={2}>Furnished</option>
+            <option value={3}>Semi-Furnished</option>
           </select>
         </div>
       </div>
