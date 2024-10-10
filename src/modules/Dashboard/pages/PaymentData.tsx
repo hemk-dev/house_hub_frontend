@@ -22,19 +22,38 @@ const PaymentData: React.FC = () => {
   // const data = useAppSelector((state) => state.dashboard.paymentData); // Fetch payment data from Redux store
   const navigate = useNavigate(); // Hook for navigation
   const [properties, setProperties] = useState<any>();
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const response = await fetch(
-        `http://localhost:5000/properties/transactions`
-      );
-      const data = await response.json();
-      console.log("🚀 ~ fetchData ~ data:", data);
-      setProperties(data);
-      // await dispatch(fetchPaymentData());
-      setLoading(false);
+      try {
+        const token = localStorage.getItem("token"); // Replace with your actual key
+        console.log("🚀 ~ fetchData ~ token:", token)
+        const response = await fetch(
+          `http://localhost:5000/properties/transactions`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json", // Optional: Add if needed
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("🚀 ~ fetchData ~ data:", data);
+        setProperties(data);
+        // await dispatch(fetchPaymentData());
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchData();
   }, [dispatch]);
 
