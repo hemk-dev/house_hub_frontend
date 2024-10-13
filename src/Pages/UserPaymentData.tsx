@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Breadcrumb, Layout, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom"; // For navigation
-import { useAppDispatch, useAppSelector } from "../../../Config/store";
+import { useAppDispatch } from "../Config/store";
 
 const { Header, Content } = Layout;
 
@@ -15,7 +15,7 @@ interface PaymentDataType {
   createdDate: string; // Assuming createdDate is a string (e.g., ISO date)
 }
 
-const PaymentData: React.FC = () => {
+const UserPaymentData: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   // const data = useAppSelector((state) => state.dashboard.paymentData); // Fetch payment data from Redux store
@@ -114,13 +114,12 @@ const PaymentData: React.FC = () => {
             <Breadcrumb>
               <Breadcrumb.Item>
                 <span
-                  onClick={() => navigate("/dashboard/landingpage")}
+                  onClick={() => navigate("/")}
                   className="cursor-pointer text-black font-bold"
                 >
-                  Dashboard
+                  Home
                 </span>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>Payments</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
         </Row>
@@ -137,4 +136,4 @@ const PaymentData: React.FC = () => {
   );
 };
 
-export default PaymentData;
+export default UserPaymentData;

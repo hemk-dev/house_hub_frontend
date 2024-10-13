@@ -17,6 +17,7 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentFailed from "./components/PaymentFailed";
 import PaymentData from "./modules/Dashboard/pages/PaymentData";
 import LandingPage from "./modules/Dashboard/pages/LandingPage";
+import UserPaymentData from "./Pages/UserPaymentData";
 
 function App() {
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY!);
@@ -46,6 +47,11 @@ function App() {
           <Route
             path="/payment-failed"
             element={<UserPublicRoute component={PaymentFailed} />}
+          />
+
+          <Route
+            path="/transections"
+            element={<UserPublicRoute component={UserPaymentData} />}
           />
 
           <Route

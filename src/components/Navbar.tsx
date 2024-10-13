@@ -19,6 +19,13 @@ const Navbar = () => {
         House Hub
       </Link>
       <div className="flex items-center">
+      {isAuthenticated && (roleId === "3") && (
+          <Link to="/transections" className="mr-4">
+            <button className="hover:text-red-500 text-gray-600">
+              Transections
+            </button>
+          </Link>
+        )}
         {isAuthenticated && (roleId === "1" || roleId === "2") && (
           <Link to="/dashboard/landingpage" className="mr-4">
             <button className="hover:text-red-500 text-gray-600">
