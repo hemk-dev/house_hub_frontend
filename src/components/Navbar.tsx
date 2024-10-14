@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../Config/store";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -9,20 +10,23 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove the token from local storage
+    localStorage.removeItem("name"); // Remove the token from local storage
     localStorage.removeItem("roleId"); // Remove the roleId from local storage
     navigate("/"); // Redirect to home after logout
   };
 
+  const name = localStorage.getItem("name");
   return (
     <div className=" w-full py-4 px-8 flex justify-between items-center shadow-md">
       <Link to="/" className="text-2xl font-bold">
         House Hub
       </Link>
       <div className="flex items-center">
-      {isAuthenticated && (roleId === "3") && (
+        {name && <p className="mx-4">Hi, <span className="font-bold">{name}</span></p> }
+        {isAuthenticated && roleId === "3" && (
           <Link to="/transections" className="mr-4">
             <button className="hover:text-red-500 text-gray-600">
-              Transections
+              Transactions
             </button>
           </Link>
         )}

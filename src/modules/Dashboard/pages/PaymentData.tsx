@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Breadcrumb, Layout, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom"; // For navigation
 import { useAppDispatch, useAppSelector } from "../../../Config/store";
-
+import moment from "moment-timezone";
 const { Header, Content } = Layout;
 
 interface PaymentDataType {
@@ -56,20 +56,34 @@ const PaymentData: React.FC = () => {
     fetchData();
   }, [dispatch]);
 
-  // Map payment data to match the table structure
   const dataSource: PaymentDataType[] = Array.isArray(properties)
-    ? properties.map((payment: any) => ({
-        key: payment.id, // Use the unique ID as key
-        propertyName: payment.property_name,
-        buyerName: payment.buyer_name,
-        ownerName: payment.owner_name,
-        amount: (payment.amount / 100).toFixed(2), // Divide amount by 100 and format it to 2 decimal places
-        status: payment.status,
-        createdDate: new Date(payment.createdAt).toLocaleString(), // Format date as needed
-      }))
-    : []; // Fallback to empty array if data is not an array
+    ? properties.map((payment: any) => {
+        console.log("Original createdAt:", payment.createdAt); // Debug log
+        const utcDate = moment.utc(payment.createdAt); // Create a moment object in UTC
 
-  // Define columns for the payment table
+        // Add 5 hours and 30 minutes to UTC
+        const istDate = utcDate
+          .add(5, "hours")
+          .add(30, "minutes")
+          .format("DD/MM/YYYY, HH:mm:ss");
+
+        console.log("Converted IST Date:", istDate); 
+        const IstDate = utcDate
+        .add(5, "hours")
+        .add(30, "minutes")
+        .format("DD/MM/YYYY, HH:mm:ss");// Log IST Date
+        console.log("🚀 ~ ?properties.map ~ IstDate:", IstDate)
+        return {
+          key: payment.id,
+          propertyName: payment.property_name,
+          buyerName: payment.buyer_name,
+          ownerName: payment.owner_name,
+          amount: (payment.amount / 100).toFixed(2),
+          status: payment.status,
+          createdDate: IstDate, // Format date as needed
+        };
+      })
+    : [];
   const columns = [
     {
       title: "Property Name",

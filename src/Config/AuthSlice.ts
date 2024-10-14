@@ -87,6 +87,7 @@ export const doLogin =
       const userRole = decodedToken.roleId;
 
       localStorage.setItem("role", userRole);
+      localStorage.setItem("name", decodedToken.fname);
       dispatch(success(response.data));
       dispatch(setUserToken(response.data.token));
 
@@ -104,6 +105,7 @@ export const doLogout = (): AppThunk<any> => async (dispatch) => {
     dispatch(setUserDetail(null));
     dispatch(setInitialData(null));
     localStorage.removeItem("token");
+    localStorage.removeItem("name");
     localStorage.removeItem("role"); // Clear the role on logout
     return Promise.resolve(response.data);
   } catch (error: any) {

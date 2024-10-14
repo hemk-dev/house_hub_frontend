@@ -66,15 +66,15 @@ const Filters: React.FC<FiltersProps> = ({
   }, []);
 
   return (
-    <div className=" w-1/5 bg-red-500 p-4 border-r border-gray-200 h-screen">
-      <h3 className="text-2xl font-sans mb-6 text-white">Filter Properties</h3>
+    <div className=" w-1/5 bg-gray-400 p-4 border-r border-gray-200 h-screen">
+      <h3 className="text-2xl font-sans mb-6 text-black">Filter Properties</h3>
 
       {/* Rent Filter */}
       <div className="flex gap-4">
         <div className="mb-4">
           <label
             htmlFor="minRent"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             Min Rent (₹)
           </label>
@@ -92,7 +92,7 @@ const Filters: React.FC<FiltersProps> = ({
         <div className="mb-4">
           <label
             htmlFor="maxRent"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             Max Rent (₹)
           </label>
@@ -112,7 +112,7 @@ const Filters: React.FC<FiltersProps> = ({
         <div className="mb-4">
           <label
             htmlFor="minDeposit"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             Min Deposit (₹)
           </label>
@@ -130,7 +130,7 @@ const Filters: React.FC<FiltersProps> = ({
         <div className="mb-4">
           <label
             htmlFor="maxDeposit"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             Max Deposit (₹)
           </label>
@@ -149,7 +149,7 @@ const Filters: React.FC<FiltersProps> = ({
       <div className="flex gap-4">
         {/* BHK Filter */}
         <div className="mb-4 w-2/4">
-          <label htmlFor="BHK" className="text-sm font-medium text-white mb-1">
+          <label htmlFor="BHK" className="text-sm font-medium text-black mb-1">
             BHK
           </label>
           <select
@@ -171,7 +171,7 @@ const Filters: React.FC<FiltersProps> = ({
         <div className="mb-4">
           <label
             htmlFor="furnishing"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             Furnishing
           </label>
@@ -194,7 +194,7 @@ const Filters: React.FC<FiltersProps> = ({
       <div className="mb-4">
         <label
           htmlFor="country"
-          className="block text-sm font-medium text-white mb-1"
+          className="block text-sm font-medium text-black mb-1"
         >
           Country
         </label>
@@ -218,7 +218,7 @@ const Filters: React.FC<FiltersProps> = ({
         <div className="mb-4 w-2/4">
           <label
             htmlFor="state"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             State
           </label>
@@ -240,7 +240,7 @@ const Filters: React.FC<FiltersProps> = ({
         <div className="mb-4 w-2/4">
           <label
             htmlFor="city"
-            className="block text-sm font-medium text-white mb-1"
+            className="block text-sm font-medium text-black mb-1"
           >
             City
           </label>
@@ -264,7 +264,7 @@ const Filters: React.FC<FiltersProps> = ({
       <div className="mb-4">
         <label
           htmlFor="owner"
-          className="block text-sm font-medium text-white mb-1"
+          className="block text-sm font-medium text-black mb-1"
         >
           Owner
         </label>

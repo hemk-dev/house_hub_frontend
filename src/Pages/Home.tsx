@@ -8,14 +8,14 @@ const Home = () => {
   // State variables to capture user input
   const [location, setLocation] = useState("");
   const [bhk, setBhk] = useState(""); // For storing BHK value
-  const [minRent, setMinRent] = useState(""); // For storing minimum rent
+  const [maxRent, setMaxRent] = useState(""); // For storing minimum rent
 
   const handleSearch = () => {
     // Construct the query parameters
     const queryParams = new URLSearchParams({
       city: location,
       BHK: bhk,
-      minRent: minRent,
+      maxRent: maxRent,
     }).toString();
 
     // Navigate to the listing page with the query parameters
@@ -65,9 +65,9 @@ const Home = () => {
             <input
               className="focus:outline-none bg-transparent text-gray-600 w-full"
               type="number"
-              placeholder="Min Rent"
-              value={minRent}
-              onChange={(e) => setMinRent(e.target.value)}
+              placeholder="Max Rent"
+              value={maxRent}
+              onChange={(e) => setMaxRent(e.target.value)}
             />
           </div>
 
