@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Breadcrumb, Layout, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom"; // For navigation
 import { useAppDispatch } from "../Config/store";
+import moment from "moment";
 
 const { Header, Content } = Layout;
 
@@ -57,18 +58,31 @@ const UserPaymentData: React.FC = () => {
   }, [dispatch]);
 
   // Map payment data to match the table structure
-  const dataSource: PaymentDataType[] = Array.isArray(properties)
-    ? properties.map((payment: any) => ({
-        key: payment.id, // Use the unique ID as key
-        propertyName: payment.property_name,
-        buyerName: payment.buyer_name,
-        ownerName: payment.owner_name,
-        amount: (payment.amount / 100).toFixed(2), // Divide amount by 100 and format it to 2 decimal places
-        status: payment.status,
-        createdDate: new Date(payment.createdAt).toLocaleString(), // Format date as needed
-      }))
-    : []; // Fallback to empty array if data is not an array
 
+  const dataSource: PaymentDataType[] = Array.isArray(properties)
+    ? properties.map((payment: any) => {
+        const utcDate = moment.utc(payment.createdAt); // Create a moment object in UTC
+
+        const istDate = utcDate
+          .add(5, "hours")
+          .add(30, "minutes")
+          .format("DD/MM/YYYY, HH:mm:ss");
+
+        const IstDate = utcDate
+          .add(5, "hours")
+          .add(30, "minutes")
+          .format("DD/MM/YYYY, HH:mm:ss"); // Log IST Date
+        return {
+          key: payment.id,
+          propertyName: payment.property_name,
+          buyerName: payment.buyer_name,
+          ownerName: payment.owner_name,
+          amount: (payment.amount / 100).toFixed(2),
+          status: payment.status,
+          createdDate: IstDate, // Format date as needed
+        };
+      })
+    : [];
   // Define columns for the payment table
   const columns = [
     {

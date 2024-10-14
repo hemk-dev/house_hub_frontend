@@ -494,7 +494,7 @@ const List: React.FC = () => {
                       {/* Rent, Security Deposit, and Buttons */}
                       <div className="flex flex-col items-center mb-4">
                         <p className="font-bold text-xl flex ">
-                          ₹{property.security_deposit}
+                          ₹{property.rent}
                           <Tooltip
                             placement="bottomRight"
                             title={
@@ -524,19 +524,19 @@ const List: React.FC = () => {
                           </Tooltip>
                         </p>
                         <p className="text-md font-normal text-gray-600 text-lg">
-                          Security Deposit
+                          Rent
                         </p>
                       </div>
 
                       <div className="space-y-2">
                         <button
-                          className="px-4 py-2 w-full bg-red-500 text-white rounded-full hover:bg-red-600"
+                          className="px-4 py-2 w-full bg-blue-400 text-white rounded-full hover:bg-blue-500"
                           onClick={(e) => handlePayment(e, property.id)}
                         >
                           {isLoading ? "Processing..." : "Book Now"}
                         </button>
                         <button
-                          className="px-4 py-2 w-full border border-red-500 text-red-500 rounded-full hover:bg-red-50"
+                          className="px-4 py-2 w-full border border-blue-400 text-blue-500 rounded-full hover:bg-blue-100"
                           onClick={() => handleEnquireNow(property.id)}
                         >
                           Enquire Now
